@@ -51,7 +51,7 @@ export default function Welcome({posts }: WelcomeProps) {
                             className="block group">
                             <article className="bg-white shadow-sm flex flex-col md:flex-row border-l-4 border-[#dcb98a] group-hover:shadow-md group-hover:bg-stone-50 transition-all duration-300">
                                 {/*Text*/}
-                                <div className='p-6 flex flex-col flex-grow md:w-3/5 lg:w-2/3'>
+                                <div className={`p-6 flex flex-col flex-grow md:w-3/5 lg:w-2/3 ${displayImages.length >0 ? 'md:w-3/5 lg:w-2/3' : 'w-full'}`}>
                                     <header className='mb-3'>
                                         <h2 className='text-xl font-bold text-stone-800 uppercase tracking-wide line-clamp-2 group-hover:text-[#dcb98a] transition-colors'>
                                             {post.title}
