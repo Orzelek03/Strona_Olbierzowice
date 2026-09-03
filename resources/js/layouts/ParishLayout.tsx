@@ -8,7 +8,7 @@ type ParishLayoutProps = {
 
 export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
     return (
-        <div className="min-h-screen bg-[#f8f0fa] flex flex-col font-sans text-stone-800">
+        <div className="min-h-screen flex flex-col font-sans text-stone-800 bg-fixed bg-cover" style={{backgroundImage: "url('/images/tlo2.jpeg')"}}>
             
             {/* Główna siatka: items-start pozwala kolumnom mieć różną wysokość i umożliwia scrollowanie sticky */}
             <div className="w-full max-w-[1920px] mx-auto px-2 sm:px-0 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start flex-1 my-6">
