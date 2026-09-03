@@ -11,9 +11,9 @@ class Intention extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content',
-        'location',
+        'intention',
         'Masstime',
         'Massdate',
+        'location',
     ];
 }

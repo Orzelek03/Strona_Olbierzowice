@@ -18,9 +18,9 @@ class IntentionFactory extends Factory
     public function definition(): array
     {
         return [
-            'Massdate' => fake()->dateTimeBetween('now', '+1 month')->format('m-d'),
-            'Masstime' => fake()->randomElement(['08:00', '10:00', '12:00', '14:00', '16:00']),
             'intention' => 'Za zmarłych ' . fake()->name(),
+            'Masstime' => '10:00',
+            'Massdate' => '2026-09-03',
             'location' => fake()->randomElement(['Olbierzowice', 'Nawodzice']),
         ];
     }

@@ -1,11 +1,13 @@
 <?php
 use App\Models\Announcement;
 use App\Models\Intention;
+use App\Models\Post;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    $aktualnosci = Post::where('is_published', true) ->latest() ->paginate(4);
+    return Inertia::render ('Welcome', ['posts' => $aktualnosci]);
 })->name('glowna');
 
 
