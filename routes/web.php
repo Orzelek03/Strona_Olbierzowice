@@ -14,13 +14,13 @@ Route::get('/ogloszenia', function () {
 })->name('ogloszenia');
 
 Route::get('/ogloszenia/olbierzowice', function(){
-    $ogloszenia = Announcement::where('location', 'Olbierzowice')->where('location','olbierzowice')->latest()->paginate(5);
+    $ogloszenia = Announcement::where('location', 'Olbierzowice')->where('location','Olbierzowice')->latest()->paginate(5);
     return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
     'title' => 'Ogłoszenia - Olbierzowice']);
 })->name('ogloszenia.olbierzowice');
 
 Route::get('/ogloszenia/nawodzice', function(){
-    $ogloszenia = Announcement::where('location', 'Nawodzice')->where('location','olbierzowice')->latest()->paginate(5);
+    $ogloszenia = Announcement::where('location', 'Nawodzice')->where('location','Nawodzice')->latest()->paginate(5);
     return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
     'title' => 'Ogłoszenia - Nawodzice']);
 })->name('ogloszenia.nawodzice');
