@@ -24,9 +24,10 @@ interface PaginatedPosts{
 
 interface WelcomeProps {
     posts: PaginatedPosts;
+  
 }
 
-export default function Welcome({posts }: WelcomeProps) {
+export default function Welcome({posts, }: WelcomeProps) {
     return (
         <ParishLayout showpic={true}>
             <Head title="Strona Główna" />
@@ -35,19 +36,19 @@ export default function Welcome({posts }: WelcomeProps) {
                 <h1 className='text-3xl font-bold uppercase tracking-widest text-center text-stone-900 border-b border-[#cbb085]/30 pb-4'>Aktualności</h1>
                 <div className='flex flex-col gap-6'>
                     {posts.data.map((post)=>{
-                    const mockGallery = post.image_path ?[
+                    const MockGallery = post.image_path ?[
                         post.image_path,
                         `https://picsum.photos/seed/${post.id}a/800/400`,
                         `https://picsum.photos/seed/${post.id}b/800/400`,
                         `https://picsum.photos/seed/${post.id}c/800/400`,
                         `https://picsum.photos/seed/${post.id}d/800/400`,
                     ] :[];
-                    const displayImages = mockGallery.slice(0, 3);
-                    const remainingCount = mockGallery.length - 3;
+                    const displayImages = MockGallery.slice(0, 3);
+                    const remainingCount = MockGallery.length - 3;
                     return(
                         <Link
                             key={post.id}
-                            href={'/aktualnosci/${post.id}'}
+                            href={`/aktualnosci/${post.id}`}
                             className="block group">
                             <article className="bg-white shadow-sm flex flex-col md:flex-row border-l-4 border-[#dcb98a] group-hover:shadow-md group-hover:bg-stone-50 transition-all duration-300">
                                 {/*Text*/}
@@ -91,7 +92,7 @@ export default function Welcome({posts }: WelcomeProps) {
                                         {remainingCount > 0 && (
                                             <div className='absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-lg md:text-xl rounded-sm'>
                                                 +{remainingCount}
-                                                </div>
+                                                </div> 
                                             
                                         )}
                                         </div>
