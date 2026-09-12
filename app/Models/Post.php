@@ -9,10 +9,10 @@ class Post extends Model
 {
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
-    protected $fillable =[
-        'title',
-        'content',
-        'image_path',
-        'is_published'
-    ];
+    protected $fillable =['title','content','image_path','is_published','album_id'];
+
+    public function album()
+    {
+        return $this -> belongsTo(Album::class);
+    }
 }
