@@ -1,18 +1,18 @@
-import { Form, Head, usePage } from '@inertiajs/react';
+import { Form, Head, usePage } from "@inertiajs/react";
 /* @chisel-email-verification */
-import { Link } from '@inertiajs/react';
+import { Link } from "@inertiajs/react";
 /* @end-chisel-email-verification */
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
-import type { Auth } from '@/types';
+import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileController";
+import DeleteUser from "@/components/delete-user";
+import Heading from "@/components/heading";
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { edit } from "@/routes/profile";
+import type { Auth } from "@/types";
 /* @chisel-email-verification */
-import { send } from '@/routes/verification';
+import { send } from "@/routes/verification";
 /* @end-chisel-email-verification */
 
 type PageProps = {
@@ -98,7 +98,7 @@ export default function Profile(
                                 auth.user.email_verified_at === null && (
                                     <div>
                                         <p className="-mt-4 text-sm text-muted-foreground">
-                                            Your email address is unverified.{' '}
+                                            Your email address is unverified.{" "}
                                             <Link
                                                 href={send()}
                                                 as="button"
@@ -110,7 +110,7 @@ export default function Profile(
                                         </p>
 
                                         {status ===
-                                            'verification-link-sent' && (
+                                            "verification-link-sent" && (
                                             <div className="mt-2 text-sm font-medium text-green-600">
                                                 A new verification link has been
                                                 sent to your email address.
@@ -141,7 +141,7 @@ export default function Profile(
 Profile.layout = {
     breadcrumbs: [
         {
-            title: 'Profile settings',
+            title: "Profile settings",
             href: edit(),
         },
     ],

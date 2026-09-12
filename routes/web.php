@@ -1,11 +1,17 @@
 <?php
+use App\Http\Controllers\Admin\AlbumController;
+use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\IntentionController;
+use App\Http\Controllers\Admin\PostController;
 use App\Models\Announcement;
 use App\Models\Intention;
 use App\Models\Post;
+use App\Models\Album;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     $aktualnosci = Post::where('is_published', true) ->latest() ->paginate(4);
@@ -67,8 +73,16 @@ Route::get('/kontakt', function(){
 }) ->name('kontakt');
 
 Route::get('/galeria', function(){
-    return Inertia::render('Gallery');
-}) -> name('galeria');
+    $albums = Album::orderBy('event_date', 'desc') ->paginate(9);
+    return Inertia::render('Gallery', [
+        'albums' => $albums
+    ]);
+}) -> name('galeria.index');
+
+Route::get('/galeria/{id}', function($id){
+    $album = Album::with('photos')->findOrFail($id);
+    return Inertia::render('Album', ['album' => $album]);
+}) -> name ('galeria.album');
 
 
 
@@ -79,8 +93,24 @@ Route::get('/intencje',function(){
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('/dashboard', 'dashboard')->name('dashboard');
+Route::middleware(['auth',])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function(){
+    return Inertia::render('Dashboard');
+    })->name('dashboard');
+    Route::get('/albumy/dodaj', [AlbumController::class, 'create'])->name('admin.albums.create');
+    Route::post('/albumy', [AlbumController::class, 'store'])-> name('admin.albums.store');
+    Route::get('/albumy/{id}/edytuj', [AlbumController::class, 'edit'])->name('admin.albums.edit');
+    Route::put('albumy/{id}', [AlbumController::class, 'update'])->name('admin.album.update');
+    Route::delete('/albumy/{id}', [AlbumController::class, 'delete'])->name('admin.album.delete');
+    
+    Route::get('/aktualnosci/dodaj', [PostsController::class, 'create'])->name('admin.posts.create');
+    Route::post('/aktualnosci', [PostController::class, 'store'])-> name('admin.posts.store');
+
+    Route::get('/intencje/dodaj', [IntentionController::class, 'create'])->name('admin.intentions.create');
+    Route::post('/intencje', [IntetnionController::class, 'store'])-> name('admin.intentions.store');
+
+    Route::get('/ogloszenia/dodaj', [AnnouncementController::class, 'create'])->name('admin.announcements.create');
+    Route::post('/ogloszenia', [AnnouncementController::class, 'store'])-> name('admin.announcements.store');
 });
 
 require __DIR__.'/settings.php';
