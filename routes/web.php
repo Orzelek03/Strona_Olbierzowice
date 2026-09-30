@@ -93,10 +93,13 @@ Route::get('/intencje',function(){
 
 
 
-Route::middleware(['auth',])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function(){
     return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/albumy', [App\Http\Controllers\Admin\AlbumController::class, 'index']) -> name('dashboard');
+    Route::get('/albumy', [AlbumController::class, 'index'])->name('admin.albums.index');
     Route::get('/albumy/dodaj', [AlbumController::class, 'create'])->name('admin.albums.create');
     Route::post('/albumy', [AlbumController::class, 'store'])-> name('admin.albums.store');
     Route::get('/albumy/{id}/edytuj', [AlbumController::class, 'edit'])->name('admin.albums.edit');
