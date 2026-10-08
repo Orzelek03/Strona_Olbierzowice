@@ -3,12 +3,23 @@ import ParishLayout from "@/layouts/ParishLayout";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 
+interface Photo{
+    id: number;
+    image_path: string;
+}
+
+interface Album{
+    id: number;
+    photos: Photo[];
+}
+
 interface Post {
     id: number;
     title: string;
     content: string;
     image_path: string | null;
     created_at: string;
+    album?: Album | null;
 }
 interface PaginationLink {
     url: string | null;
@@ -36,17 +47,12 @@ export default function Welcome({ posts }: WelcomeProps) {
                 </h1>
                 <div className="flex flex-col gap-6">
                     {posts.data.map((post) => {
-                        const MockGallery = post.image_path
-                            ? [
-                                  post.image_path,
-                                  `https://picsum.photos/seed/${post.id}a/800/400`,
-                                  `https://picsum.photos/seed/${post.id}b/800/400`,
-                                  `https://picsum.photos/seed/${post.id}c/800/400`,
-                                  `https://picsum.photos/seed/${post.id}d/800/400`,
-                              ]
-                            : [];
-                        const displayImages = MockGallery.slice(0, 3);
-                        const remainingCount = MockGallery.length - 3;
+                        const Photos = post.image_path ? [post.image_path] : [];
+                        if(post.album && post.album.photos){
+                            post.album.photos.forEach(photo => Photos.push(photo.image_path));
+                        }
+                        const displayPhotos= Photos.slice(0,3);
+                        const remainingCount = Photos.length -3;
                         return (
                             <Link
                                 key={post.id}
@@ -56,7 +62,7 @@ export default function Welcome({ posts }: WelcomeProps) {
                                 <article className="bg-white shadow-sm flex flex-col md:flex-row border-l-4 border-[#dcb98a] group-hover:shadow-md group-hover:bg-stone-50 transition-all duration-300">
                                     {/*Text*/}
                                     <div
-                                        className={`p-6 flex flex-col flex-grow md:w-3/5 lg:w-2/3 ${displayImages.length > 0 ? "md:w-3/5 lg:w-2/3" : "w-full"}`}
+                                        className={`p-6 flex flex-col flex-grow md:w-3/5 lg:w-2/3 ${displayPhotos.length > 0 ? "md:w-3/5 lg:w-2/3" : "w-full"}`}
                                     >
                                         <header className="mb-3">
                                             <h2 className="text-xl font-bold text-stone-800 uppercase tracking-wide line-clamp-2 group-hover:text-[#dcb98a] transition-colors">
@@ -78,12 +84,12 @@ export default function Welcome({ posts }: WelcomeProps) {
                                         </div>
                                     </div>
                                     {/*Photos on the right*/}
-                                    {displayImages.length > 0 && (
+                                    {displayPhotos.length > 0 && (
                                         <div className="p-4 md:pl-0 w-full md:w-1/3 flex-shrink-0">
                                             <div className="grid grid-cols-3 gap-1 h-56 md:h-full min-h-[14rem]">
                                                 <div className="col-span-2 relative">
                                                     <img
-                                                        src={displayImages[0]}
+                                                        src={displayPhotos[0]}
                                                         alt="main photo"
                                                         className="absolute inset-0 w-full h-full object-cover rounded-sm"
                                                     />
@@ -92,7 +98,7 @@ export default function Welcome({ posts }: WelcomeProps) {
                                                     <div className="flex-1 relative">
                                                         <img
                                                             src={
-                                                                displayImages[1]
+                                                                displayPhotos[1]
                                                             }
                                                             alt="second photo"
                                                             className="absolute inset-0 w-full h-full object-cover rounded-sm"
@@ -102,7 +108,7 @@ export default function Welcome({ posts }: WelcomeProps) {
                                                     <div className="flex-1 relative">
                                                         <img
                                                             src={
-                                                                displayImages[2]
+                                                                displayPhotos[2]
                                                             }
                                                             alt="Third photo"
                                                             className="absolute inset-0 w-full h-full object-cover rounded-sm"

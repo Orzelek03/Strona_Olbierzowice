@@ -103,8 +103,23 @@ class AlbumController extends Controller
         return redirect()->route('admin.albums.index')->with('success','Album został pomyślnie utworzony.');
     }
 
-    public function destroy($id){
+    public function delete($id){
         $album = Album::findOrFail($id);
+            if($album -> cover_image && !str_starts_with($album->cover_image, 'http')){
+                $coverPath = str_replace('/storage/', '', $album->cover_image);
+                Storage::disk('public')->delete($coverPath);
+            }
+            if($album->photos){
+                foreach($album->photos as $photo){
+                    if ($photo-> image_path && !str_starts_with($photo->image_path, 'http')){
+                        $photoPath = str_replace('/storage/', '', $photo->image_path);
+                        Storage::disk('public')->delete($photoPath);
+                    }
+                }
+            }
+        $album -> photos()->delete();
+        $album->delete();
+        
         return redirect()->route('admin.albums.index')->with('success','Album został pomyślnie usunięty');
     }
 

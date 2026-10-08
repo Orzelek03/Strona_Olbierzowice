@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    $aktualnosci = Post::where('is_published', true) ->latest() ->paginate(4);
+    $aktualnosci = Post::where('is_published', true)-> with('album.photos') ->latest() ->paginate(4);
 
     {/*$slowo = Cache::remember('slowo_dzisiejsze', now()->addHours(12), function () {
     try{
@@ -35,7 +35,7 @@ Route::get('/', function () {
 })->name('glowna');
 
 Route::get('/aktualnosci/{id}', function ($id){
-    $post = Post::findOrFail($id);
+    $post = Post::with('album.photos')->findOrFail($id);
     return Inertia::render('PostShow', ['post'=> $post]);
 })-> name('post.show');
 
