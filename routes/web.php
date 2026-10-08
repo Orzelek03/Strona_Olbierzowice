@@ -121,5 +121,16 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('/{id}', [PostController::class, 'update'])->name('update');
         Route::delete('/{id}', [PostController::class, 'delete'])->name('delete');
     });
+
+    Route::prefix('intencje')->name('admin.intentions.')->group(function(){
+        Route::get('/',[IntentionController::class, 'index'])->name('index');
+        Route::get('/dodaj',[IntentionController::class, 'create'])->name('create');
+        Route::post('/',[IntentionController::class, 'store'])->name('store');
+        Route::delete('/wiele',[IntentionController::class, 'lotDelete'])->name('lotDelete');
+        Route::get('/{id}/edytuj',[IntentionController::class, 'edit'])->name('edit');
+        Route::put('/{id}',[IntentionController::class, 'update'])->name('update');
+        Route::delete('/{id}',[IntentionController::class, 'delete'])->name('delete');
+    
+    });
 });
 require __DIR__.'/settings.php';

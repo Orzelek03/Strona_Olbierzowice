@@ -6,15 +6,23 @@ interface Post {
     id: number;
     title: string;
     image_path: string | null;
-    is_published: number;
+    is_published: number | boolean;
     created_at: string;
 }
 
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
+interface PaginatedPosts {
+    data: Post[];
+    links: PaginationLink[];
+}
+
 interface IndexProps {
-    posts: {
-        data: Post[];
-        links: any[];
-    };
+    posts: PaginatedPosts;
 }
 
 export default function Index({ posts }: IndexProps) {
@@ -35,7 +43,7 @@ export default function Index({ posts }: IndexProps) {
             <div className="max-w-5xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
                 <div className="flex justify-between items-center mb-8 border-b border-stone-200 pb-4">
                     <Link
-                        href="/dashboard"
+                        href="/admin/dashboard"
                         className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
                     >
                         &laquo; Kokpit
@@ -50,18 +58,19 @@ export default function Index({ posts }: IndexProps) {
                         + Dodaj nowy post
                     </Link>
                 </div>
+                
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-stone-200 text-stone-500 text-xs uppercase tracking wider">
+                            <tr className="border-b border-stone-200 text-stone-500 text-xs uppercase tracking-wider">
                                 <th className="p-3">Zdjęcia</th>
                                 <th className="p-3">Tytuł</th>
                                 <th className="p-3">Data utworzenia</th>
-                                <th className="p-3">Status(Opublikowany)</th>
+                                <th className="p-3">Status</th>
                                 <th className="p-3 text-right">Akcje</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-stone-200 text-stone-700 text-sm">
+                        <tbody className="divide-y divide-stone-100 text-stone-700 text-sm">
                             {posts.data.map((post) => (
                                 <tr key={post.id} className="hover:bg-stone-50">
                                     <td className="p-3">
@@ -74,7 +83,7 @@ export default function Index({ posts }: IndexProps) {
                                                 />
                                             ) : (
                                                 <span className="text-[10px] text-stone-400 flex items-center justify-center h-full">
-                                                    Brak zdjęcia
+                                                    Brak
                                                 </span>
                                             )}
                                         </div>
@@ -98,17 +107,15 @@ export default function Index({ posts }: IndexProps) {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="p-3">
+                                    <td className="p-3 text-right space-x-2">
                                         <Link
                                             href={`/admin/aktualnosci/${post.id}/edytuj`}
-                                            className="text-blue-600 hover:text-blue-900 font-semibold text-xs uppercase tracking-wider border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors"
+                                            className="inline-block text-stone-600 hover:text-stone-900 font-semibold text-xs uppercase tracking-wider border border-stone-200 px-3 py-1 rounded hover:bg-stone-50 transition-colors"
                                         >
                                             Edytuj
                                         </Link>
                                         <button
-                                            onClick={() =>
-                                                handleDelete(post.id)
-                                            }
+                                            onClick={() => handleDelete(post.id)}
                                             className="text-red-600 hover:text-red-900 font-semibold text-xs uppercase tracking-wider border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition-colors"
                                         >
                                             Usuń
@@ -118,12 +125,37 @@ export default function Index({ posts }: IndexProps) {
                             ))}
                         </tbody>
                     </table>
+                    
                     {posts.data.length === 0 && (
                         <div className="text-center text-stone-400 py-12 italic">
                             Brak postów w bazie danych
                         </div>
                     )}
                 </div>
+
+                {posts.links && posts.links.length > 3 && (
+                    <div className="flex flex-wrap justify-center gap-1 mt-6 pt-4 border-t border-stone-200">
+                        {posts.links.map((link, index) => {
+                            const translatedLabel = link.label.replace('Previous', '&laquo;').replace('Next', '&raquo;');
+                            return !link.url ? (
+                                <span
+                                    key={index}
+                                    className="px-3 py-1 text-sm border bg-stone-50 text-stone-400 border-stone-200"
+                                    dangerouslySetInnerHTML={{ __html: translatedLabel }}
+                                />
+                            ) : (
+                                <Link
+                                    key={index}
+                                    href={link.url}
+                                    className={`px-3 py-1 text-sm border flex items-center justify-center transition-all ${
+                                        link.active ? "bg-[#cca572] text-white border-[#cca572] font-bold shadow-sm" : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                                    }`}
+                                    dangerouslySetInnerHTML={{ __html: translatedLabel }}
+                                />
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </ParishLayout>
     );
