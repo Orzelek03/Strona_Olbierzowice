@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    $aktualnosci = Post::where('is_published', true) ->latest() ->paginate(4);
+    $aktualnosci = Post::where('is_published', true)-> with('album.photos') ->latest() ->paginate(4);
 
     {/*$slowo = Cache::remember('slowo_dzisiejsze', now()->addHours(12), function () {
     try{
@@ -35,7 +35,7 @@ Route::get('/', function () {
 })->name('glowna');
 
 Route::get('/aktualnosci/{id}', function ($id){
-    $post = Post::findOrFail($id);
+    $post = Post::with('album.photos')->findOrFail($id);
     return Inertia::render('PostShow', ['post'=> $post]);
 })-> name('post.show');
 
@@ -93,27 +93,33 @@ Route::get('/intencje',function(){
 
 
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function(){
+Route::middleware(['auth'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
-    })->name('dashboard');
+})->name('dashboard');
 
-    Route::get('/albumy', [App\Http\Controllers\Admin\AlbumController::class, 'index']) -> name('dashboard');
-    Route::get('/albumy', [AlbumController::class, 'index'])->name('admin.albums.index');
-    Route::get('/albumy/dodaj', [AlbumController::class, 'create'])->name('admin.albums.create');
-    Route::post('/albumy', [AlbumController::class, 'store'])-> name('admin.albums.store');
-    Route::get('/albumy/{id}/edytuj', [AlbumController::class, 'edit'])->name('admin.albums.edit');
-    Route::put('albumy/{id}', [AlbumController::class, 'update'])->name('admin.album.update');
-    Route::delete('/albumy/{id}', [AlbumController::class, 'delete'])->name('admin.album.delete');
-    
-    Route::get('/aktualnosci/dodaj', [PostsController::class, 'create'])->name('admin.posts.create');
-    Route::post('/aktualnosci', [PostController::class, 'store'])-> name('admin.posts.store');
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('admin.dashboard');
 
-    Route::get('/intencje/dodaj', [IntentionController::class, 'create'])->name('admin.intentions.create');
-    Route::post('/intencje', [IntetnionController::class, 'store'])-> name('admin.intentions.store');
+    Route::prefix('albumy')->name('admin.albums.')->group(function () {
+        Route::get('/', [AlbumController::class, 'index'])->name('index');
+        Route::get('/dodaj', [AlbumController::class, 'create'])->name('create');
+        Route::post('/', [AlbumController::class, 'store'])->name('store');
+        Route::get('/{id}/edytuj', [AlbumController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AlbumController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AlbumController::class, 'delete'])->name('delete');
+    });
 
-    Route::get('/ogloszenia/dodaj', [AnnouncementController::class, 'create'])->name('admin.announcements.create');
-    Route::post('/ogloszenia', [AnnouncementController::class, 'store'])-> name('admin.announcements.store');
+    Route::delete('/zdjecia/{id}', [AlbumController::class, 'deletePhoto'])->name('admin.photos.delete');
+
+    Route::prefix('aktualnosci')->name('admin.posts.')->group(function () {
+        Route::get('/', [PostController::class, 'index'])->name('index');
+        Route::get('/dodaj', [PostController::class, 'create'])->name('create');
+        Route::post('/', [PostController::class, 'store'])->name('store');
+        Route::get('/{id}/edytuj', [PostController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [PostController::class, 'update'])->name('update');
+        Route::delete('/{id}', [PostController::class, 'delete'])->name('delete');
+    });
 });
-
 require __DIR__.'/settings.php';

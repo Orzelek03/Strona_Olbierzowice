@@ -2,12 +2,23 @@ import React, { useState } from "react";
 import ParishLayout from "@/layouts/ParishLayout";
 import { Head, Link } from "@inertiajs/react";
 
+interface Photo {
+    id: number;
+    image_path: string;
+}
+
+interface Album {
+    id: number;
+    photos: Photo[];
+}
+
 interface Post {
     id: number;
     title: string;
     content: string;
     image_path: string | null;
     created_at: string;
+    album?: Album | null;
 }
 
 interface PostShowProps {
@@ -28,25 +39,22 @@ export default function PostShow({ post }: PostShowProps) {
     }
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-    const MockGallery = post.image_path
-        ? [
-              post.image_path,
-              `https://picsum.photos/seed/${post.id}a/1200/800`,
-              `https://picsum.photos/seed/${post.id}b/1200/800`,
-              `https://picsum.photos/seed/${post.id}c/1200/800`,
-          ]
-        : [];
+    const Photos : string [] = [];
+    if(post.image_path) Photos.push(post.image_path);
+    if(post.album && post.album.photos){
+        post.album.photos.forEach(photo => Photos.push(photo.image_path));
+    }
 
     const closeLightbox = () => setLightboxIndex(null);
     const nextImage = () => {
         if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex + 1) % MockGallery.length);
+            setLightboxIndex((lightboxIndex + 1) % Photos.length);
         }
     };
     const prevImage = () => {
         if (lightboxIndex !== null) {
             setLightboxIndex(
-                (lightboxIndex - 1 + MockGallery.length) % MockGallery.length,
+                (lightboxIndex - 1 + Photos.length) % Photos.length,
             );
         }
     };
@@ -79,14 +87,14 @@ export default function PostShow({ post }: PostShowProps) {
                     {post.content}
                 </div>
 
-                {MockGallery.length > 0 && (
+                {Photos.length > 0 && (
                     <div className="mt-8 border-t border-stone-100 pt-8">
                         <h3 className="text-lg font-bold text-stone-800 uppercase mb-4 tracking-wider">
                             Fotorelacja
                         </h3>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {MockGallery.map((imgSrc, index) => (
+                            {Photos.map((imgSrc, index) => (
                                 <div
                                     key={index}
                                     onClick={() => setLightboxIndex(index)}
@@ -121,7 +129,7 @@ export default function PostShow({ post }: PostShowProps) {
 
                     <div className="w-full h-full p-4 md:p-16 flex items-center justify-center">
                         <img
-                            src={MockGallery[lightboxIndex]}
+                            src={Photos[lightboxIndex]}
                             alt="Powiększone zdjęcie"
                             className="max-w-full max-h-full object-contain rounded-md shadow-2xl"
                         />
@@ -135,7 +143,7 @@ export default function PostShow({ post }: PostShowProps) {
                     </button>
                     {/* Poprawiono brakujący myślnik w klasie tracking-widest */}
                     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest font-semibold">
-                        {lightboxIndex + 1} / {MockGallery.length}
+                        {lightboxIndex + 1} / {Photos.length}
                     </div>
                 </div>
             )}

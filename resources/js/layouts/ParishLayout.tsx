@@ -11,7 +11,7 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
     
     return (
         <div
-            className="min-h-screen flex flex-col font-sans text-stone-800 bg-fixed bg-cover overflow-x-hidden"
+            className="min-h-screen flex flex-col font-sans text-stone-800 bg-fixed bg-cover "
             style={{ backgroundImage: "url('/images/tlo2.jpeg')" }}
         >
             {/* mobilny pasek górny */}
@@ -86,7 +86,7 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
             <div className="w-full max-w-[1920px] mx-auto px-2 sm:px-0 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start flex-1 my-6">
                 
                 {/* LEWY PANEL (Desktop) */}
-                <aside className="hidden lg:flex lg:sticky lg:top-6 lg:col-span-2 bg-[#dcb98a]/90 backdrop-blur-sm p-4 flex-col rounded shadow-md overflow-hidden items-center justify-center min-h-[200px]">
+                <aside className="hidden lg:flex lg:sticky lg:top-60 lg:col-span-2 bg-[#dcb98a]/90 backdrop-blur-sm p-4 flex-col rounded shadow-md overflow-hidden items-center justify-center min-h-[200px]">
                     <div className="bg-[#cca572] py-2 px-3 border-b border-[#cbb085]/60 text-center w-full mb-2">
                         <h3 className="text-xs tracking-widest font-bold text-stone-900 uppercase">
                             Linki
@@ -120,7 +120,9 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
                     {/* Baner 700 lat */}
                     {showpic && (
                         <div className="bg-[#cca876] flex items-center justify-center overflow-hidden shadow-sm aspect-[2/1] md:aspect-[3/1] lg:aspect-[4/1]">
-                            <img src="/images/700lat.jpeg" alt="700 lat Parafii" className="w-full h-full object-cover lg:object-contain" />
+                            <img src="/images/700lat.jpeg" alt="700 lat Parafii" className="hidden lg:block w-full h-full object-cover lg:object-contain" />
+                            <img src="/images/baner_mobile.jpeg" alt="700 lat Parafii" className="block lg:hidden w-full h-full object-cover lg:object-contain" />
+
                         </div>
                     )}
 
@@ -130,7 +132,7 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
                 </div>
 
                 {/* PRAWY PANEL (Desktop) */}
-                <aside className="hidden lg:flex lg:sticky lg:top-6 lg:col-span-2 bg-[#dcb98a]/90 backdrop-blur-sm p-4 flex-col rounded shadow-md overflow-hidden items-center justify-center min-h-[200px] gap-5 mt-40">
+                <aside className="hidden lg:flex lg:sticky lg:top-60 lg:col-span-2 bg-[#dcb98a]/90 backdrop-blur-sm p-4 flex-col rounded shadow-md overflow-hidden items-center justify-center min-h-[200px] gap-5 mt-40">
                     <div className="bg-[#e8d5bc] w-full flex font-bold uppercase shadow-sm justify-center p-4 hover:bg-white border border-[#cbb085]/30 transition-colors">
                         <a target="_blank" href="https://niezbednik.niedziela.pl/" rel="noopener noreferrer" className="text-sm xl:text-base font-semibold text-center text-stone-700 leading-relaxed hover:text-[#dcb98a] transition-colors duration-200">
                             Czytania na dziś

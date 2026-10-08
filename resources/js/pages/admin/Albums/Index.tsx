@@ -24,6 +24,9 @@ export default function Index({albums}:IndexProps){
             router.delete(`/admin/albumy/${id}`);
         }
     };
+    const handleEdit = (id:number) =>{
+        router.get(`/admin/albumy/${id}/edytuj`);
+    };
 
     return(
         <ParishLayout showpic={false}>
@@ -31,6 +34,9 @@ export default function Index({albums}:IndexProps){
 
             <div className='max-w-5xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]'>
                 <div className='flex justify-between items-center mb-8 border-b border-stone-200 pb-4'>
+                    <Link href="/dashboard" className='text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors'>
+                    &laquo; Kokpit
+                    </Link>
                     <h1 className='text-2xl font-bold uppercase tracking-wider text-stone-800'>
                         Albumy w galerii
                     </h1>
@@ -74,6 +80,12 @@ export default function Index({albums}:IndexProps){
                                             className='text-red-600 hover:text-red-900 font-semibold text-xs uppercase tracking-wider border border-red-200 
                                             px-3 py-1 rounded hover:bg-red-50 transition-colors'>
                                                 Usuń
+                                            </button>
+                                            <button
+                                            onClick={()=> handleEdit(album.id)}
+                                            className='text-black-600 hover:text-black-900 font-semibold text-xs uppercase tracking-wider border border-red-200 
+                                            px-3 py-1 rounded hover:bg-red-50 transition-colors'>
+                                                Edytuj
                                             </button>
                                     </td>
                                 </tr>

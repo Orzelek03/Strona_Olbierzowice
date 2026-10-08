@@ -56,7 +56,10 @@ export default function Create(){
                         <input
                             type="file"
                             onChange={e => setData('cover_image', e.target.files ? e.target.files[0]: null)}
-                            className='w-full border border-stone-300 rounded p-2 bg-stone-50'/>
+                            className='w-full border border-stone-300 rounded p-2 bg-white text-stone-600 cursor-pointer
+                            file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:border file:border-stone-300 file:rounded-sm 
+                            file:text-sm file:font-bold file:uppercase file:tracking-wide file:text-stone-800 file:bg-white 
+                            hover:file:bg-[#cca572] hover:file:text-white hover:file:border-[#cca572] file:transition-colors'/>
                         {errors.cover_image && <div className='text-red-500 text-xs mt-1'>{errors.cover_image}</div>}
                     </div>
 
@@ -66,7 +69,10 @@ export default function Create(){
                             type="file"
                             multiple
                             onChange={e=>setData('photos', e.target.files? Array.from(e.target.files):[])}
-                            className='w-full border border-stone-300 rounded p-2 bg-stone-50'
+                            className='w-full border border-stone-300 rounded p-2 bg-white text-stone-600 cursor-pointer
+                            file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:border file:border-stone-300 file:rounded-sm 
+                            file:text-sm file:font-bold file:uppercase file:tracking-wide file:text-stone-800 file:bg-white 
+                            hover:file:bg-[#cca572] hover:file:text-white hover:file:border-[#cca572] file:transition-colors'
                             />
                         {errors.photos && <div className='text-red-500 text-xs mt-1'>{errors.photos}</div>}
                     </div>
