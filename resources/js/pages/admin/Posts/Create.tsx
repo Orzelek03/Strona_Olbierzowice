@@ -57,7 +57,7 @@ export default function Create() {
                             Treść
                         </label>
                         <textarea
-                            value={data.content}
+                            value={data.content}    
                             onChange={(e) => setData("content", e.target.value)}
                             rows={8}
                             className="w-full border border-stone-300 rounded p-2 focus:ring-2 focus:ring-[#cca572] focus:outline-none"

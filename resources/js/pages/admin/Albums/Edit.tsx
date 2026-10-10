@@ -79,6 +79,7 @@ export default function Edit({ album }: { album: Album }) {
                         <input
                             type="date"
                             value={data.event_date}
+                            style={{ colorScheme: 'light' }}
                             onChange={(e) =>
                                 setData("event_date", e.target.value)
                             }

@@ -139,4 +139,14 @@ class PostController extends Controller
 
         return redirect()->back()->with('success', 'Post został usunięty pomyślnie.');
     }
+
+    public function lotDelete(Request $request){
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:posts,id'
+        ]);
+    
+        Post::whereIn('id', $request->ids)->delete();
+        return redirect()->back()->with('success', 'Zaznaczone Posty zostały usunięte pomyślnie.');
+    }
 }
