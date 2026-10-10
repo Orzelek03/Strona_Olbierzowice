@@ -44,6 +44,22 @@ Markdown
 
 A local development setup for a parish management application built with Laravel, React (Inertia.js), and Tailwind CSS.
 
+## 🚀 Key Features
+
+- **Information Portal (Public Page):**
+  * Homepage with latest news and dynamic content loading.
+  * News/posts section with attached photo galleries.
+  * Parish announcements (categorized by location: Olbierzowice, Nawodzice) and catechesis sessions.
+  * Mass intentions schedule sorted by date and time.
+  * Interactive photo gallery with album views.
+  * Parish history and contact page.
+
+- **Administrative Panel (`/admin`):**
+  * Protected authentication system with a dedicated redirection.
+  * Management dashboard with quick-access cards.
+  * Full CRUD management for: Albums, Posts, Intentions, and Announcements.
+  * Automated file management (creating unique subfolders for albums).
+
 ---
 
 ## 🛠️ Tech Stack
