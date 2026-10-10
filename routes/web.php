@@ -117,6 +117,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::get('/', [PostController::class, 'index'])->name('index');
         Route::get('/dodaj', [PostController::class, 'create'])->name('create');
         Route::post('/', [PostController::class, 'store'])->name('store');
+        Route::delete('/wiele', [PostController::class, 'lotDelete'])->name('lotDelete');
         Route::get('/{id}/edytuj', [PostController::class, 'edit'])->name('edit');
         Route::put('/{id}', [PostController::class, 'update'])->name('update');
         Route::delete('/{id}', [PostController::class, 'delete'])->name('delete');
@@ -131,6 +132,17 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('/{id}',[IntentionController::class, 'update'])->name('update');
         Route::delete('/{id}',[IntentionController::class, 'delete'])->name('delete');
     
+    });
+
+    Route::prefix('ogloszenia')->name('admin.announcements.')->group(function(){
+        Route::get('/',[AnnouncementController::class, 'index'])->name('index');
+        Route::get('/dodaj',[AnnouncementController::class, 'create'])->name('create');
+        Route::post('/',[AnnouncementController::class, 'store'])->name('store');
+        Route::delete('/wiele',[AnnouncementController::class, 'lotDelete'])->name('lotDelete');
+        Route::get('/{id}/edytuj',[AnnouncementController::class, 'edit'])->name('edit');
+        Route::put('/{id}',[AnnouncementController::class, 'update'])->name('update');
+        Route::delete('/{id}',[AnnouncementController::class, 'delete'])->name('delete');
+        
     });
 });
 require __DIR__.'/settings.php';

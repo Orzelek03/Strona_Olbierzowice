@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head, Link, router } from "@inertiajs/react";
 import ParishLayout from "../../../layouts/ParishLayout";
 
@@ -26,8 +26,40 @@ interface IndexProps {
 }
 
 export default function Index({ posts }: IndexProps) {
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            setSelectedIds(posts.data.map(p => p.id));
+        } else {
+            setSelectedIds([]);
+        }
+    }
+
+    const handleSelect = (id: number) => {
+        if (selectedIds.includes(id)) {
+            setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+        } else {
+            setSelectedIds([...selectedIds, id]);
+        };
+    }
+
+    const handleLotDelete = () => {
+        if (confirm(`Czy chcesz na pewno usunąć ${selectedIds.length} zaznaczonych postów?`)) {
+            router.delete('/admin/aktualnosci/wiele', {
+                data: { ids: selectedIds },
+                preserveScroll: true,
+                onSuccess: () => {
+                    setSelectedIds([]);
+                    alert("Zaznaczone posty zostały usunięte");
+                },
+                onError: () => alert("Wystąpił błąd podczas usuwania"),
+            })
+        }
+    }
+
     const handleDelete = (id: number) => {
-        if (confirm("Czy na pewno chcesz usunąć post?")) {
+        if (confirm("Czy na pewno chcesz usunąć ten post?")) {
             router.delete(`/admin/aktualnosci/${id}`, {
                 preserveScroll: true,
                 onSuccess: () => alert("Post został usunięty"),
@@ -58,11 +90,35 @@ export default function Index({ posts }: IndexProps) {
                         + Dodaj nowy post
                     </Link>
                 </div>
+
+                {/* PASEK MASOWEGO USUWANIA */}
+                {selectedIds.length > 0 && (
+                    <div className="bg-red-50 p-4 mb-4 rounded flex justify-between items-center border border-red-100">
+                        <span className="text-red-800 font-semibold text-sm">
+                            Zaznaczono elementów: {selectedIds.length}
+                        </span>
+                        <button
+                            onClick={handleLotDelete}
+                            className="bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors"
+                        >
+                            Usuń zaznaczone
+                        </button>
+                    </div>
+                )}
                 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="border-b border-stone-200 text-stone-500 text-xs uppercase tracking-wider">
+                                {/* GŁÓWNY CHECKBOX */}
+                                <th className='p-3 w-12 text-center'>
+                                    <input 
+                                        type="checkbox" 
+                                        className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                        onChange={handleSelectAll}
+                                        checked={posts.data.length > 0 && selectedIds.length === posts.data.length}
+                                    />
+                                </th>
                                 <th className="p-3">Zdjęcia</th>
                                 <th className="p-3">Tytuł</th>
                                 <th className="p-3">Data utworzenia</th>
@@ -73,6 +129,15 @@ export default function Index({ posts }: IndexProps) {
                         <tbody className="divide-y divide-stone-100 text-stone-700 text-sm">
                             {posts.data.map((post) => (
                                 <tr key={post.id} className="hover:bg-stone-50">
+                                    {/* INDYWIDUALNY CHECKBOX */}
+                                    <td className='p-3 text-center'>
+                                        <input 
+                                            type="checkbox" 
+                                            className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                            checked={selectedIds.includes(post.id)}
+                                            onChange={() => handleSelect(post.id)}
+                                        />
+                                    </td>
                                     <td className="p-3">
                                         <div className="w-16 h-12 bg-stone-200 rounded overflow-hidden">
                                             {post.image_path ? (
@@ -107,7 +172,7 @@ export default function Index({ posts }: IndexProps) {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="p-3 text-right space-x-2">
+                                    <td className="p-3 text-right space-x-2 whitespace-nowrap">
                                         <Link
                                             href={`/admin/aktualnosci/${post.id}/edytuj`}
                                             className="inline-block text-stone-600 hover:text-stone-900 font-semibold text-xs uppercase tracking-wider border border-stone-200 px-3 py-1 rounded hover:bg-stone-50 transition-colors"

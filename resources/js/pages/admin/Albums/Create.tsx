@@ -46,6 +46,7 @@ export default function Create(){
                         <input
                             type="date"
                             value={data.event_date}
+                            style={{ colorScheme: 'light' }}
                             onChange={e => setData('event_date', e.target.value)}
                             className='w-full border border-stone-300 rounded p-2 focus:ring-2 focus:ring-[#cca572] focus:outline-none'/>
                         {errors.event_date && <div className='text-red-500 text-xs mt-1'>{errors.event_date}</div>}
