@@ -58,7 +58,7 @@ class AlbumController extends Controller
 
         if($request->hasFile('photos')){
             foreach($request->file('photos') as $index=> $photoFile){
-                $photoPath ='/storage/'. $photoFile->store('albums/photos','public');
+                $photoPath = '/storage/'.$photoFile->store('albums/' . $album->id . '/photos', 'public');
                 Photo::create([
                     'album_id' => $album ->id,
                     'image_path'=> $photoPath,
@@ -71,37 +71,44 @@ class AlbumController extends Controller
     }
 
     public function store (Request $request){
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'event_date' => 'required|date',
-            'cover_image' => 'nullable|image|max:5120',
-            'photos.*' => 'image|max:5120',
-        ]);
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'event_date' => 'required|date',
+        'cover_image' => 'nullable|image|max:5120',
+        'photos.*' => 'image|max:5120',
+    ]);
 
-        $coverPath = null;
-        if($request->hasFile('cover_image')){
-            $path = $request->file('cover_image')->store('albums/covers','public');
-            $coverPath = '/storage/' . $path;
-        }
-        $album = Album::create([
-            'title' => $request->title,
-            'event_date' => $request -> event_date,
-            'cover_image' => $coverPath,
-        ]);
+    // 1. Najpierw tworzymy album (na razie bez okładki), aby baza wygenerowała mu unikalne ID
+    $album = Album::create([
+        'title' => $request->title,
+        'event_date' => $request->event_date,
+        'cover_image' => null, 
+    ]);
 
-        if($request->hasFile('photos')){
-            foreach($request->file('photos') as $index=> $photoFile){
-                $photoPath ='/storage/'. $photoFile->store('albums/photos','public');
-                Photo::create([
-                    'album_id' => $album ->id,
-                    'image_path'=> $photoPath,
-                    'sort_order' => $index,
-                ]);
-            }
-        }
-
-        return redirect()->route('admin.albums.index')->with('success','Album został pomyślnie utworzony.');
+    // 2. Skoro mamy już ID (np. 15), zapisujemy okładkę w folderze albums/15
+    if($request->hasFile('cover_image')){
+        $path = $request->file('cover_image')->store('albums/' . $album->id, 'public');
+        
+        // Aktualizujemy wpis w bazie o gotową ścieżkę
+        $album->update(['cover_image' => '/storage/' . $path]);
     }
+
+    // 3. Zapisujemy pozostałe zdjęcia do podfolderu np. albums/15/photos
+    if($request->hasFile('photos')){
+        foreach($request->file('photos') as $index => $photoFile){
+            // Magia dzieje się tutaj - dodajemy ID do ścieżki zapisu:
+            $photoPath = '/storage/'. $photoFile->store('albums/' . $album->id . '/photos', 'public');
+            
+            Photo::create([
+                'album_id' => $album->id,
+                'image_path'=> $photoPath,
+                'sort_order' => $index,
+            ]);
+        }
+    }
+
+    return redirect()->route('admin.albums.index')->with('success','Album został pomyślnie utworzony.');
+}
 
     public function delete($id){
         $album = Album::findOrFail($id);

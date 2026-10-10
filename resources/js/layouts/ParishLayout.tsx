@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import React, { ReactNode, useState } from "react";
 
 type ParishLayoutProps = {
@@ -8,7 +8,7 @@ type ParishLayoutProps = {
 
 export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    
+    const {auth} =usePage().props as any;
     return (
         <div
             className="min-h-screen flex flex-col font-sans text-stone-800 bg-fixed bg-cover "
@@ -152,7 +152,12 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
             <footer className="w-full bg-[#dcb98a] h-16 flex items-center justify-center font-bold uppercase text-xs tracking-widest text-stone-900 mt-auto shadow-inner z-10">
                 <div className="flex items-center text-center justify-center gap-4">
                     <span>© 2026 Parafia. Wszelkie prawa zastrzeżone.</span>
-                    <Link href="/login" className="hover:text-[#cca572] transition-colors">Logowanie</Link>
+                    <Link 
+    href={auth?.user ? "/admin/dashboard" : "/login"} 
+    className="hover:text-[#cca572] transition-colors"
+>
+    {auth?.user ? "Panel Administratora" : "Logowanie"}
+</Link>
                 </div>
             </footer>
         </div>

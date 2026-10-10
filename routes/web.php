@@ -93,13 +93,11 @@ Route::get('/intencje',function(){
 
 
 
-Route::middleware(['auth'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('admin/Dashboard');
     })->name('admin.dashboard');
 
     Route::prefix('albumy')->name('admin.albums.')->group(function () {

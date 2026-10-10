@@ -55,7 +55,7 @@ class PostController extends Controller
                 'cover_image' => $imagePath,
             ]);
                 foreach ($request->file('photos') as $index => $photoFile) {
-            $photoPath = '/storage/'.$photoFile->store('albums/photos', 'public');
+            $photoPath = '/storage/'.$photoFile->store('albums/' . $album->id . '/photos', 'public');
             Photo::create([
                 'album_id' => $album->id,
                 'image_path' => $photoPath,
@@ -117,7 +117,7 @@ class PostController extends Controller
             ? $album->photos()->max('sort_order')+1
             : 0;
             foreach($request->file('photos')as $index => $photoFile){
-                $photoPath = '/storage/' . $photoFile->store('albums/photos','public');
+                $photoPath = '/storage/'.$photoFile->store('albums/' . $album->id . '/photos', 'public');
                 Photo::create([
                     'album_id' => $album->id,
                     'image_path' => $photoPath,
