@@ -87,7 +87,7 @@ Route::get('/galeria/{id}', function($id){
 
 
 Route::get('/intencje',function(){
-    $intentions = Intention::orderBy('Massdate')->orderBy('Masstime')->get();
+    $intentions = Intention::orderBy('title')->get();
     return Inertia::render('Intentions', ['intentions' => $intentions]);
 }) -> name('intencje');
 

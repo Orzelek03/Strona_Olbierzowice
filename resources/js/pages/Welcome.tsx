@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ParishLayout from "@/layouts/ParishLayout";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 
-interface Photo{
+interface Photo {
     id: number;
     image_path: string;
 }
 
-interface Album{
+interface Album {
     id: number;
     photos: Photo[];
 }
@@ -37,9 +37,66 @@ interface WelcomeProps {
 }
 
 export default function Welcome({ posts }: WelcomeProps) {
+    const [showWelcomePopup, setWelcomePopup] = useState(false);
+
+    useEffect(() => {
+        const hasSeenPopup = sessionStorage.getItem("hasSeenWelcomePopup");
+        if (!hasSeenPopup) {
+            setWelcomePopup(true);
+            sessionStorage.setItem("hasSeenWelcomePopup", "true");
+
+            const timer = setTimeout(() => {
+                setWelcomePopup(false);
+            }, 20000);
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    const closePopup = () => {
+        setWelcomePopup(false);
+    };
     return (
         <ParishLayout showpic={true}>
             <Head title="Strona Główna" />
+            {showWelcomePopup && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-none transition-opacity duration-500">
+                    <div className="bg-[#e8d5bc] text-stone-900 max-w-md w-full rounded-sm shadow-2xl flex flex-col relative border-2 border-[#dcb98a] animate-fade-in-up pointer-events-auto">
+                        <button
+                            onClick={closePopup}
+                            className="absolute top-3 right-3 text-stone-600 hover:text-stone-900 focus:outline-none transition-colors"
+                            aria-label="Zamknij"
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                        <div className="p-8 text-center flex flex-col items-center gap-4">
+                            <h2 className="text-xl font-bold uppercase tracking-widest text-stone-900 border-b border-[#cbb085]/40 pb-2">
+                                Szczęść Boże!
+                            </h2>
+                            <p className="text-base font-medium leading-relaxed text-stone-700">
+                                Witamy na oficjalnej stronie internetowej
+                                Parafii św.Wawrzyńca w Olbierzowicach!
+                                Znajdziesz tu ogłoszenia, relacje z wydarzeń
+                                parafii, oraz historię naszej wspólnoty.
+                            </p>
+                        </div>
+                        <div className="w-full h-1 bg-[#cbb085]/30">
+                            <div className="h-full bg-[#dcb98a] animate-[shrink_5s_linear_forwards]"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="flex flex-col gap-8 w-full mx-auto max-w-5xl">
                 <h1 className="text-3xl font-bold uppercase tracking-widest text-center text-stone-900 border-b border-[#cbb085]/30 pb-4">
@@ -48,11 +105,13 @@ export default function Welcome({ posts }: WelcomeProps) {
                 <div className="flex flex-col gap-6">
                     {posts.data.map((post) => {
                         const Photos = post.image_path ? [post.image_path] : [];
-                        if(post.album && post.album.photos){
-                            post.album.photos.forEach(photo => Photos.push(photo.image_path));
+                        if (post.album && post.album.photos) {
+                            post.album.photos.forEach((photo) =>
+                                Photos.push(photo.image_path),
+                            );
                         }
-                        const displayPhotos= Photos.slice(0,3);
-                        const remainingCount = Photos.length -3;
+                        const displayPhotos = Photos.slice(0, 3);
+                        const remainingCount = Photos.length - 3;
                         return (
                             <Link
                                 key={post.id}

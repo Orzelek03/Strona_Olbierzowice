@@ -18,10 +18,9 @@ export default function Announcements() {
                     >
                         <header className="mb-3">
                             <h2 className="text-lg font-bold text-stone-800 uppercase tracking-wide">
-                                Ogłoszenia
+                                Olbierzowice
                             </h2>
                             <span className="text-xs font-semibold text-stone-500 tracking-wider">
-                                Olbierzowice
                             </span>
                         </header>
                         <div className="text-sm leading-relaxed text-stone-700">
@@ -35,10 +34,9 @@ export default function Announcements() {
                     >
                         <header className="mb-3">
                             <h2 className="text-lg font-bold text-stone-800 uppercase tracking-wide">
-                                Ogłoszenia
+                                Nawodzice
                             </h2>
                             <span className="text-xs font-semibold text-stone-500 tracking-wider">
-                                Nawodzice
                             </span>
                         </header>
                         <div className="text-sm leading-relaxed text-stone-700">

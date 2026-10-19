@@ -11,8 +11,8 @@ class IntentionController extends Controller
 {
     public function index(){
 
-        $intentions = Intention::orderBy('Massdate', 'desc')
-        ->orderBy('Masstime', 'desc') -> paginate(15);
+        $intentions = Intention::orderBy('title', 'desc')
+        ->orderBy('title', 'desc') -> paginate(15);
 
         return Inertia::render('admin/Intentions/Index', ['intentions' => $intentions]);
     }
@@ -23,10 +23,8 @@ class IntentionController extends Controller
 
     public function store(Request $request){
         $validated = $request -> validate([
-            'Massdate' => 'required|date',
-            'Masstime' => 'required|string|max:5',
-            'intention' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
         ]);
 
         Intention::create($validated);
@@ -42,11 +40,9 @@ class IntentionController extends Controller
     public function update(Request $request, $id){
         $intention = Intention::findOrFail($id);
 
-        $validated = $request->validate([
-            'Massdate'=> 'required|date|after_or_equal:2026-01-01',
-            'Masstime'=> 'required|string|max:5',
-            'intention' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+        $validated = $request -> validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
         ]);
 
         $intention->update($validated);

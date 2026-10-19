@@ -4,10 +4,8 @@ import ParishLayout from '../../../layouts/ParishLayout';
 
 interface Intention {
     id: number;
-    Massdate: string;
-    Masstime: string;
-    intention: string;
-    location: string;
+    title: string;
+    content: string;
 }
 
 interface PaginationLink {
@@ -115,11 +113,8 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                                         checked={intentions.data.length > 0 && selectedIds.length === intentions.data.length}
                                     />
                                 </th>
-                                <th className='p-4'>Data</th>
-                                <th className='p-4'>Godzina</th>
-                                <th className='p-4'>Miejscowość</th>
-                                <th className='p-4'>Intencja</th>
-                                <th className='p-4'>Akcje</th>
+                                <th className='p-4'>Tytuł</th>
+                                <th className='p-4'>Intencje</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,18 +131,11 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                                             />
                                         </td>
                                         <td className='p-4 font-semibold text-stone-800 whitespace-nowrap'>
-                                            {new Date(intention.Massdate).toLocaleDateString('pl-PL')}
-                                        </td>
-                                        <td className='p-4 text-stone-600 font-medium'>
-                                            {intention.Masstime}
-                                        </td>
-                                        <td className='p-4 text-stone-600'>
-                                            <span className={`px-2 py-1 text-xs font-bold rounded ${intention.location === 'Olbierzowice' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
-                                                {intention.location}
-                                            </span>
+                                            {(intention.title)}
                                         </td>
                                         <td className='p-4 text-stone-700'>
-                                            {intention.intention}
+                                            <div className='Line-clamp-2' dangerouslySetInnerHTML={{__html: intention.content}}></div>
+                                            
                                         </td>
                                         <td className='p-4 text-right whitespace-nowrap'>
                                             <Link
