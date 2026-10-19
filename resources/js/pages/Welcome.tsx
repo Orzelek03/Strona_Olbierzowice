@@ -47,7 +47,7 @@ export default function Welcome({ posts }: WelcomeProps) {
 
             const timer = setTimeout(() => {
                 setWelcomePopup(false);
-            }, 20000);
+            }, 5000);
             return () => clearTimeout(timer);
         }
     }, []);
