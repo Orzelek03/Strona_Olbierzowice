@@ -143,46 +143,75 @@ export default function Welcome({ posts }: WelcomeProps) {
                                         </div>
                                     </div>
                                     {/*Photos on the right*/}
-                                    {displayPhotos.length > 0 && (
-                                        <div className="p-4 md:pl-0 w-full md:w-1/3 flex-shrink-0">
-                                            <div className="grid grid-cols-3 gap-1 h-56 md:h-full min-h-[14rem]">
-                                                <div className="col-span-2 relative">
-                                                    <img
-                                                        src={displayPhotos[0]}
-                                                        alt="main photo"
-                                                        className="absolute inset-0 w-full h-full object-cover rounded-sm"
-                                                    />
-                                                </div>
-                                                <div className="col-span-1 flex flex-col gap-1 h-full">
-                                                    <div className="flex-1 relative">
-                                                        <img
-                                                            src={
-                                                                displayPhotos[1]
-                                                            }
-                                                            alt="second photo"
-                                                            className="absolute inset-0 w-full h-full object-cover rounded-sm"
-                                                        />
-                                                    </div>
+                                    {/* Photos on the right */}
+{displayPhotos.length > 0 && (
+    <div className="p-4 md:pl-0 w-full md:w-1/3 flex-shrink-0 flex">
+        {/* 1 ZDJĘCIE */}
+        {displayPhotos.length === 1 && (
+            <div className="w-full h-56 md:h-full min-h-[14rem] relative rounded-sm overflow-hidden">
+                <img
+                    src={displayPhotos[0]}
+                    alt="photo"
+                    className="w-full h-full object-cover"
+                />
+            </div>
+        )}
 
-                                                    <div className="flex-1 relative">
-                                                        <img
-                                                            src={
-                                                                displayPhotos[2]
-                                                            }
-                                                            alt="Third photo"
-                                                            className="absolute inset-0 w-full h-full object-cover rounded-sm"
-                                                        />
-                                                        {remainingCount > 0 && (
-                                                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-lg md:text-xl rounded-sm">
-                                                                +
-                                                                {remainingCount}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
+        {/* 2 ZDJĘCIA */}
+        {displayPhotos.length === 2 && (
+            <div className="w-full grid grid-cols-2 gap-1 h-56 md:h-full min-h-[14rem]">
+                <div className="relative rounded-sm overflow-hidden">
+                    <img
+                        src={displayPhotos[0]}
+                        alt="photo 1"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+                <div className="relative rounded-sm overflow-hidden">
+                    <img
+                        src={displayPhotos[1]}
+                        alt="photo 2"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </div>
+        )}
+
+        {/* 3 LUB WIĘCEJ ZDJĘĆ */}
+        {displayPhotos.length >= 3 && (
+            <div className="w-full grid grid-cols-3 gap-1 h-56 md:h-full min-h-[14rem]">
+                <div className="col-span-2 relative rounded-sm overflow-hidden">
+                    <img
+                        src={displayPhotos[0]}
+                        alt="main photo"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+                <div className="col-span-1 flex flex-col gap-1 h-full">
+                    <div className="relative flex-1 rounded-sm overflow-hidden">
+                        <img
+                            src={displayPhotos[1]}
+                            alt="second photo"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="relative flex-1 rounded-sm overflow-hidden">
+                        <img
+                            src={displayPhotos[2]}
+                            alt="third photo"
+                            className="w-full h-full object-cover"
+                        />
+                        {remainingCount > 0 && (
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-lg md:text-xl">
+                                +{remainingCount}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )}
+    </div>
+)}
                                 </article>
                             </Link>
                         );
