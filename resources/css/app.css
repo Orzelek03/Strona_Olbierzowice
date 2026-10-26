@@ -140,4 +140,17 @@
     body {
         @apply bg-background text-foreground;
     }
+   
+}
+ .parish-bg{
+        background-color: #e7e5e4;
+    }
+
+    @media (min-width: 768px){
+    .parish-bg{
+        background-image: url('~!/images/tlo2.jpeg');
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
 }

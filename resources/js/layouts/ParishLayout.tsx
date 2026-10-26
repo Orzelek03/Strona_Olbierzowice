@@ -9,129 +9,290 @@ type ParishLayoutProps = {
 export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { auth } = usePage().props as any;
-    
-    return (
-        <div
-            className="min-h-screen flex flex-col font-sans text-stone-800 bg-fixed bg-cover"
-            style={{ backgroundImage: "url('/images/tlo2.jpeg')" }}
-        >
-            {/* MOBILNY PASEK GÓRNY */}
-            <div className="lg:hidden bg-[#dcb98a] p-3 flex justify-end items-center shadow-md sticky top-0 z-30">
-                <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="text-stone-900 focus:outline-none p-2 cursor-pointer hover:bg-white/20 rounded transition-colors"
-                    aria-label="Otwórz menu"
-                >
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
 
-            {/* ZACIEMNIONE TŁO (Zamyka menu po kliknięciu obok) */}
-            <div 
-                className={`lg:hidden fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 ${
-                    isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
+    return (
+        <>
+            {/*Background Style for mobile/desktop*/}
+            <style
+                dangerouslySetInnerHTML={{
+                    __html: `
+                .parish-custom-bg {
+                    background-color: #e7e5e4;
+                }
+                @media (min-width: 1024px) {
+                    .parish-custom-bg {
+                        background-image: url('/images/tlo2.jpeg');
+                        background-attachment: fixed;
+                        background-size: cover;
+                        background-position: center;
+                    }
+                }
+            `,
+                }}
             />
 
-            {/* MOBILNE MENU BOCZNE */}
-            <div 
-                className={`lg:hidden fixed inset-y-0 right-0 z-50 w-3/4 sm:w-80 bg-[#e8d5bc] shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out ${
-                    isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-                }`}
-            >
-                <div className="flex justify-end p-4 border-b border-[#cbb085]/40">
+            <div className="min-h-screen flex flex-col font-sans text-stone-800 parish-custom-bg">
+                {/* MOBILE UPSIDE BAR */}
+                <div className="lg:hidden bg-[#dcb98a] p-3 flex justify-end items-center shadow-md sticky top-0 z-30">
                     <button
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-stone-900 p-2 cursor-pointer hover:bg-white/30 rounded transition-colors"
-                        aria-label="Zamknij menu"
+                        onClick={() => setIsMobileMenuOpen(true)}
+                        className="text-stone-900 focus:outline-none p-2 cursor-pointer hover:bg-white/20 rounded transition-colors"
+                        aria-label="Otwórz menu"
                     >
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                            className="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
                         </svg>
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-6 flex flex-col gap-8 flex-1">
-                    <nav className="flex flex-col gap-3 font-bold uppercase text-sm tracking-wide text-center">
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Strona główna</Link>
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/historia" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Historia</Link>
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/intencje" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Intencje</Link>
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/ogloszenia" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Ogłoszenia</Link>
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/kontakt" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Kontakt</Link>
-                        <Link onClick={() => setIsMobileMenuOpen(false)} href="/galeria" className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]">Galeria</Link>
+                {/* Quitin menu after clicking on any place*/}
+                <div
+                    className={`lg:hidden fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 ${
+                        isMobileMenuOpen
+                            ? "opacity-100 visible"
+                            : "opacity-0 invisible"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+
+                {/* MOBILE SIDE MENU */}
+                <div
+                    className={`lg:hidden fixed inset-y-0 right-0 z-50 w-3/4 sm:w-80 bg-[#e8d5bc] shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out ${
+                        isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+                    }`}
+                >
+                    <div className="flex justify-end p-4 border-b border-[#cbb085]/40">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="text-stone-900 p-2 cursor-pointer hover:bg-white/30 rounded transition-colors"
+                            aria-label="Zamknij menu"
+                        >
+                            <svg
+                                className="w-8 h-8"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="overflow-y-auto p-6 flex flex-col gap-8 flex-1">
+                        <nav className="flex flex-col gap-3 font-bold uppercase text-sm tracking-wide text-center">
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Strona główna
+                            </Link>
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/historia"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Historia
+                            </Link>
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/intencje"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Intencje
+                            </Link>
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/ogloszenia"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Ogłoszenia
+                            </Link>
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/kontakt"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Kontakt
+                            </Link>
+                            <Link
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                href="/galeria"
+                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
+                            >
+                                Galeria
+                            </Link>
+                        </nav>
+
+                        <div className="flex flex-col gap-3 text-center">
+                            <h3 className="font-bold text-stone-900 uppercase tracking-widest mb-1 text-xs">
+                                Linki Zewnętrzne
+                            </h3>
+                            <a
+                                href="https://mogily.pl/olbierzowice"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
+                            >
+                                Cmentarz
+                            </a>
+                            <a
+                                href="https://niezbednik.niedziela.pl/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
+                            >
+                                Czytania na dziś
+                            </a>
+                            <a
+                                href="https://diecezjasandomierska.pl/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
+                            >
+                                Diecezja
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/* MAIN SITE */}
+                <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 flex flex-col gap-y-4 flex-1 my-6">
+                    {/* Nawigacja Desktopowa */}
+                    <nav className="hidden lg:flex bg-[#dcb98a] h-14 flex-row w-full font-bold uppercase text-base tracking-wide shadow-sm">
+                        <Link
+                            href="/"
+                            className="flex-1 text-center flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Strona główna
+                        </Link>
+                        <Link
+                            href="/historia"
+                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Historia
+                        </Link>
+                        <Link
+                            href="/intencje"
+                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Intencje
+                        </Link>
+                        <Link
+                            href="/ogloszenia"
+                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Ogłoszenia
+                        </Link>
+                        <Link
+                            href="/kontakt"
+                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Kontakt
+                        </Link>
+                        <Link
+                            href="/galeria"
+                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
+                        >
+                            Galeria
+                        </Link>
                     </nav>
 
-                    <div className="flex flex-col gap-3 text-center">
-                        <h3 className="font-bold text-stone-900 uppercase tracking-widest mb-1 text-xs">Linki Zewnętrzne</h3>
-                        <a href="https://mogily.pl/olbierzowice" target="_blank" rel="noopener noreferrer" className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]">Cmentarz</a>
-                        <a href="https://niezbednik.niedziela.pl/" target="_blank" rel="noopener noreferrer" className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]">Czytania na dziś</a>
-                        <a href="https://diecezjasandomierska.pl/" target="_blank" rel="noopener noreferrer" className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]">Diecezja</a>
+                    {/* Baner 700 lat */}
+                    {showpic && (
+                        <div className="bg-[#cca876] flex items-center justify-center overflow-hidden shadow-sm">
+    <img
+        src="/images/700lat.jpeg"
+        alt="700 lat Parafii"
+        className="hidden lg:block w-full h-auto" 
+    />
+    <img
+        src="/images/baner_mobile.jpeg"
+        alt="700 lat Parafii"
+        className="block lg:hidden w-full h-auto"
+    />
+</div>
+                    )}
+
+                    <main className="bg-[#e8d5bc] p-4 sm:p-8 flex flex-col min-h-[800px] shadow-sm">
+                        <div className="mt-4 flex-1">{children}</div>
+                    </main>
+                </div>
+
+                {/* FOOTER */}
+                <footer className="w-full bg-[#dcb98a] pt-8 pb-6 px-4 flex flex-col items-center justify-center mt-auto shadow-inner z-10 gap-6 border-t-4 border-[#cbb085]/50">
+                    <div className="flex flex-wrap justify-center gap-6 md:gap-12 items-center font-bold uppercase tracking-widest text-sm text-stone-900 w-full max-w-5xl">
+                        <a
+                            href="https://mogily.pl/olbierzowice"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors duration-200"
+                        >
+                            Cmentarz
+                        </a>
+                        <a
+                            href="https://niezbednik.niedziela.pl/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors duration-200"
+                        >
+                            Czytania na dziś
+                        </a>
+                        <a
+                            href="https://diecezjasandomierska.pl/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors duration-200"
+                        >
+                            Diecezja
+                        </a>
+                        <a
+                            href="https://www.facebook.com/profile.php?id=100089487466133#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#1877F2] hover:text-white transition-colors duration-200"
+                            aria-label="Facebook"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-9 h-9"
+                            >
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
                     </div>
-                </div>
-            </div>
-            
-            {/* GŁÓWNA ZAWARTOŚĆ (Bez paneli bocznych) */}
-            <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 flex flex-col gap-y-4 flex-1 my-6">
-                
-                {/* Nawigacja Desktopowa */}
-                <nav className="hidden lg:flex bg-[#dcb98a] h-14 flex-row w-full font-bold uppercase text-base tracking-wide shadow-sm">
-                    <Link href="/" className="flex-1 text-center flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Strona główna</Link>
-                    <Link href="/historia" className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Historia</Link>
-                    <Link href="/intencje" className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Intencje</Link>
-                    <Link href="/ogloszenia" className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Ogłoszenia</Link>
-                    <Link href="/kontakt" className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Kontakt</Link>
-                    <Link href="/galeria" className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200">Galeria</Link>
-                </nav>
 
-                {/* Baner 700 lat */}
-                {showpic && (
-                    <div className="bg-[#cca876] flex items-center justify-center overflow-hidden shadow-sm aspect-[2/1] md:aspect-[3/1] lg:aspect-[4/1]">
-                        <img src="/images/700lat.jpeg" alt="700 lat Parafii" className="hidden lg:block w-full h-full object-cover lg:object-contain" />
-                        <img src="/images/baner_mobile.jpeg" alt="700 lat Parafii" className="block lg:hidden w-full h-full object-cover lg:object-contain" />
+                    <div className="flex flex-col sm:flex-row items-center text-center justify-center gap-2 sm:gap-4 font-bold uppercase text-xs tracking-widest text-stone-800 border-t border-[#cbb085]/60 pt-6 w-full max-w-3xl">
+                        <span>© 2026 Parafia. Wszelkie prawa zastrzeżone.</span>
+                        <span className="hidden sm:inline text-stone-600">
+                            |
+                        </span>
+                        <Link
+                            href={auth?.user ? "/admin/dashboard" : "/login"}
+                            className="hover:text-white transition-colors duration-200"
+                        >
+                            {auth?.user ? "Panel Administratora" : "Logowanie"}
+                        </Link>
                     </div>
-                )}
-
-                <main className="bg-[#e8d5bc] p-4 sm:p-8 flex flex-col min-h-[800px] shadow-sm">
-                    <div className="mt-4 flex-1">{children}</div>
-                </main>
+                </footer>
             </div>
-
-            {/* STOPKA Z LINKAMI */}
-            <footer className="w-full bg-[#dcb98a] pt-8 pb-6 px-4 flex flex-col items-center justify-center mt-auto shadow-inner z-10 gap-6 border-t-4 border-[#cbb085]/50">
-                
-                {/* Linki z paneli bocznych */}
-                <div className="flex flex-wrap justify-center gap-6 md:gap-12 items-center font-bold uppercase tracking-widest text-sm text-stone-900 w-full max-w-5xl">
-                    <a href="https://mogily.pl/olbierzowice" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                        Cmentarz
-                    </a>
-                    <a href="https://niezbednik.niedziela.pl/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                        Czytania na dziś
-                    </a>
-                    <a href="https://diecezjasandomierska.pl/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                        Diecezja
-                    </a>
-                    <a href="https://www.facebook.com/profile.php?id=100089487466133#" target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:text-white transition-colors duration-200" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-9 h-9">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                    </a>
-                </div>
-
-                {/* Prawa autorskie i logowanie */}
-                <div className="flex flex-col sm:flex-row items-center text-center justify-center gap-2 sm:gap-4 font-bold uppercase text-xs tracking-widest text-stone-800 border-t border-[#cbb085]/60 pt-6 w-full max-w-3xl">
-                    <span>© 2026 Parafia. Wszelkie prawa zastrzeżone.</span>
-                    <span className="hidden sm:inline text-stone-600">|</span>
-                    <Link 
-                        href={auth?.user ? "/admin/dashboard" : "/login"} 
-                        className="hover:text-white transition-colors duration-200"
-                    >
-                        {auth?.user ? "Panel Administratora" : "Logowanie"}
-                    </Link>
-                </div>
-            </footer>
-        </div>
+        </>
     );
 }
