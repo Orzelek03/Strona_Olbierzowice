@@ -42,9 +42,12 @@ export default function Intentions({ intentions = [] }: IntentionsProps) {
                                     <h2 className="text-4xl font-bold text-center text-stone-800 uppercase tracking-wide mb-6 border-b border-stone-100 pb-2">
                                         {item.title}
                                     </h2>
-                                    <div className="leading-relaxed text-2xl text-stone-800 w-full overflow-hidden break-words hyphens-auto [&_p]:mb-4 [&_strong]:font-bold [&_strong]:text-stone-900"
-                                    dangerouslySetInnerHTML={{__html: cleanContent}} />
-                                    
+                                    <div
+                                        className="leading-relaxed text-lg md:text-2xl text-stone-800 w-full overflow-hidden break-words hyphens-auto [&_p]:mb-4 [&_strong]:font-bold [&_strong]:text-stone-900 [&_*]:!text-md md:[&_*]:!text-2xl"
+                                        dangerouslySetInnerHTML={{
+                                            __html: cleanContent,
+                                        }}
+                                    />
                                 </section>
                             );
                         })}
