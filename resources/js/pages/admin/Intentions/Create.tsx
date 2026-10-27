@@ -25,6 +25,9 @@ export default function Create() {
             [{ align: [] }],
             ["clean"],
         ],
+        clipboard:{
+            matchVisual:false,
+        }
     };
 
     return (
@@ -67,7 +70,7 @@ export default function Create() {
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-stone-700 mb-2 uppercase tracking-wide">
-                                Treść intencji (Wklej z Worda)
+                                Treść intencji (Wklej jako tekst)
                             </label>
                             <div className="bg-white">
                                 <ReactQuill
