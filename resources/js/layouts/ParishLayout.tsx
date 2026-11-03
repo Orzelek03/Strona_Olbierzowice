@@ -1,5 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
-import React, { ReactNode, useState } from "react";
+import type { ReactNode } from "react";
+import React, { useState } from "react";
 
 type ParishLayoutProps = {
     children: ReactNode;
@@ -216,17 +217,17 @@ export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
                     {/* Baner 700 lat */}
                     {showpic && (
                         <div className="bg-[#cca876] flex items-center justify-center overflow-hidden shadow-sm">
-    <img
-        src="/images/700lat.jpeg"
-        alt="700 lat Parafii"
-        className="hidden lg:block w-full h-auto" 
-    />
-    <img
-        src="/images/baner_mobile.jpeg"
-        alt="700 lat Parafii"
-        className="block lg:hidden w-full h-auto"
-    />
-</div>
+                            <img
+                                src="/images/700lat.jpeg"
+                                alt="700 lat Parafii"
+                                className="hidden lg:block w-full h-auto"
+                            />
+                            <img
+                                src="/images/baner_mobile.jpeg"
+                                alt="700 lat Parafii"
+                                className="block lg:hidden w-full h-auto"
+                            />
+                        </div>
                     )}
 
                     <main className="bg-[#e8d5bc] p-4 sm:p-8 flex flex-col min-h-[800px] shadow-sm">

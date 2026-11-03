@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('intentions', function (Blueprint $table){
+        Schema::table('intentions', function (Blueprint $table) {
             $table->dropColumn(['Massdate', 'Masstime', 'location', 'intention']);
 
             $table->string('title')->after('id');
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('intentions', function(Blueprint $table){
+        Schema::table('intentions', function (Blueprint $table) {
             $table->date('Massdate')->nullable();
             $table->string('Masstime')->nullable();
             $table->string('location')->nullable();

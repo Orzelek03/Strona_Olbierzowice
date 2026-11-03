@@ -20,7 +20,7 @@ class PostFactory extends Factory
         return [
             'title' => fake()->realText(60),
             'content' => fake()->realText(800),
-            'image_path' => 'https://picsum.photos/seed/' . fake()->uuid(). '/800/400',
+            'image_path' => 'https://picsum.photos/seed/'.fake()->uuid().'/800/400',
             'is_published' => true,
             'created_at' => fake()->dateTimeBetween('-3 months', 'now'),
         ];

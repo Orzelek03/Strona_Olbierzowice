@@ -1,22 +1,22 @@
 <?php
+
 use App\Http\Controllers\Admin\AlbumController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\IntentionController;
 use App\Http\Controllers\Admin\PostController;
+use App\Models\Album;
 use App\Models\Announcement;
 use App\Models\Intention;
 use App\Models\Post;
-use App\Models\Album;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    $aktualnosci = Post::where('is_published', true)-> with('album.photos') ->latest() ->paginate(4);
+    $aktualnosci = Post::where('is_published', true)->with('album.photos')->latest()->paginate(4);
 
-    {/*$slowo = Cache::remember('slowo_dzisiejsze', now()->addHours(12), function () {
+    /*$slowo = Cache::remember('slowo_dzisiejsze', now()->addHours(12), function () {
     try{
     $response = Http::withoutVeryfing()->timeout(3)->get('https://brewiarz.pl/rss/czyt.xml');
     if ($response -> successful()){
@@ -24,76 +24,76 @@ Route::get('/', function () {
         $tytul = (string) $xml -> channel -> item[0] -> title;
         $fragment = explode(' - ', $tytul);
         return isset($fragment[1]) ? "Czytania: " . $fragment[1] : $tytul;
-    } 
+    }
     } catch (\exception $e){
 
     }
     return 'Sprawdź czytania w Niezbędniku niedzielnym';
     });
-    */}
-    return Inertia::render ('Welcome', ['posts' => $aktualnosci]);
+    */
+    return Inertia::render('Welcome', ['posts' => $aktualnosci]);
 })->name('glowna');
 
-Route::get('/aktualnosci/{id}', function ($id){
+Route::get('/aktualnosci/{id}', function ($id) {
     $post = Post::with('album.photos')->findOrFail($id);
-    return Inertia::render('PostShow', ['post'=> $post]);
-})-> name('post.show');
 
+    return Inertia::render('PostShow', ['post' => $post]);
+})->name('post.show');
 
 Route::get('/ogloszenia', function () {
     return Inertia::render('Announcements');
 })->name('ogloszenia');
 
-Route::get('/ogloszenia/olbierzowice', function(){
-    $ogloszenia = Announcement::where('location', 'Olbierzowice')->where('location','Olbierzowice')->latest()->paginate(5);
+Route::get('/ogloszenia/olbierzowice', function () {
+    $ogloszenia = Announcement::where('location', 'Olbierzowice')->where('location', 'Olbierzowice')->latest()->paginate(5);
+
     return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
-    'title' => 'Ogłoszenia - Olbierzowice']);
+        'title' => 'Ogłoszenia - Olbierzowice']);
 })->name('ogloszenia.olbierzowice');
 
-Route::get('/ogloszenia/nawodzice', function(){
-    $ogloszenia = Announcement::where('location', 'Nawodzice')->where('location','Nawodzice')->latest()->paginate(5);
+Route::get('/ogloszenia/nawodzice', function () {
+    $ogloszenia = Announcement::where('location', 'Nawodzice')->where('location', 'Nawodzice')->latest()->paginate(5);
+
     return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
-    'title' => 'Ogłoszenia - Nawodzice']);
+        'title' => 'Ogłoszenia - Nawodzice']);
 })->name('ogloszenia.nawodzice');
 
-Route::get('/katechezy', function(){
+Route::get('/katechezy', function () {
     $katechezy = Announcement::where('type', 'katecheza')->latest()->paginate(5);
+
     return Inertia::render('AnnouncementsShow', [
         'announcements' => $katechezy,
-        'title' => 'Katechezy Parafialne'
+        'title' => 'Katechezy Parafialne',
     ]);
 })->name('katechezy');
 
-Route::get('/historia', function(){
+Route::get('/historia', function () {
     return Inertia::render('History');
-}) ->name('historia');
+})->name('historia');
 
-Route::get('/kontakt', function(){
+Route::get('/kontakt', function () {
     return Inertia::render('Contact');
-}) ->name('kontakt');
+})->name('kontakt');
 
-Route::get('/galeria', function(){
-    $albums = Album::orderBy('event_date', 'desc') ->paginate(9);
+Route::get('/galeria', function () {
+    $albums = Album::orderBy('event_date', 'desc')->paginate(9);
+
     return Inertia::render('Gallery', [
-        'albums' => $albums
+        'albums' => $albums,
     ]);
-}) -> name('galeria.index');
+})->name('galeria.index');
 
-Route::get('/galeria/{id}', function($id){
+Route::get('/galeria/{id}', function ($id) {
     $album = Album::with('photos')->findOrFail($id);
+
     return Inertia::render('Album', ['album' => $album]);
-}) -> name ('galeria.album');
+})->name('galeria.album');
 
-
-
-Route::get('/intencje',function(){
+Route::get('/intencje', function () {
     $intentions = Intention::orderBy('title')->get();
+
     return Inertia::render('Intentions', ['intentions' => $intentions]);
-}) -> name('intencje');
-
-
-
-
+})->name('intencje');
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -121,26 +121,26 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::delete('/{id}', [PostController::class, 'delete'])->name('delete');
     });
 
-    Route::prefix('intencje')->name('admin.intentions.')->group(function(){
-        Route::get('/',[IntentionController::class, 'index'])->name('index');
-        Route::get('/dodaj',[IntentionController::class, 'create'])->name('create');
-        Route::post('/',[IntentionController::class, 'store'])->name('store');
-        Route::delete('/wiele',[IntentionController::class, 'lotDelete'])->name('lotDelete');
-        Route::get('/{id}/edytuj',[IntentionController::class, 'edit'])->name('edit');
-        Route::put('/{id}',[IntentionController::class, 'update'])->name('update');
-        Route::delete('/{id}',[IntentionController::class, 'delete'])->name('delete');
-    
+    Route::prefix('intencje')->name('admin.intentions.')->group(function () {
+        Route::get('/', [IntentionController::class, 'index'])->name('index');
+        Route::get('/dodaj', [IntentionController::class, 'create'])->name('create');
+        Route::post('/', [IntentionController::class, 'store'])->name('store');
+        Route::delete('/wiele', [IntentionController::class, 'lotDelete'])->name('lotDelete');
+        Route::get('/{id}/edytuj', [IntentionController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [IntentionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [IntentionController::class, 'delete'])->name('delete');
+
     });
 
-    Route::prefix('ogloszenia')->name('admin.announcements.')->group(function(){
-        Route::get('/',[AnnouncementController::class, 'index'])->name('index');
-        Route::get('/dodaj',[AnnouncementController::class, 'create'])->name('create');
-        Route::post('/',[AnnouncementController::class, 'store'])->name('store');
-        Route::delete('/wiele',[AnnouncementController::class, 'lotDelete'])->name('lotDelete');
-        Route::get('/{id}/edytuj',[AnnouncementController::class, 'edit'])->name('edit');
-        Route::put('/{id}',[AnnouncementController::class, 'update'])->name('update');
-        Route::delete('/{id}',[AnnouncementController::class, 'delete'])->name('delete');
-        
+    Route::prefix('ogloszenia')->name('admin.announcements.')->group(function () {
+        Route::get('/', [AnnouncementController::class, 'index'])->name('index');
+        Route::get('/dodaj', [AnnouncementController::class, 'create'])->name('create');
+        Route::post('/', [AnnouncementController::class, 'store'])->name('store');
+        Route::delete('/wiele', [AnnouncementController::class, 'lotDelete'])->name('lotDelete');
+        Route::get('/{id}/edytuj', [AnnouncementController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AnnouncementController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AnnouncementController::class, 'delete'])->name('delete');
+
     });
 });
 require __DIR__.'/settings.php';

@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Announcement;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use database\factories\AnnouncementFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Announcement>

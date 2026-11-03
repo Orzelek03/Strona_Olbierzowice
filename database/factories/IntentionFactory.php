@@ -18,7 +18,7 @@ class IntentionFactory extends Factory
     public function definition(): array
     {
         return [
-            'intention' => 'Za zmarłych ' . fake()->name(),
+            'intention' => 'Za zmarłych '.fake()->name(),
             'Masstime' => '10:00',
             'Massdate' => '2026-09-03',
             'location' => fake()->randomElement(['Olbierzowice', 'Nawodzice']),

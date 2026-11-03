@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('announcements', function (Blueprint $table){
+        Schema::table('announcements', function (Blueprint $table) {
             $table->string('type')->default('ogloszenia_1');
             $table->string('location')->nullable();
         });
@@ -22,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('announcements', function (Blueprint $table){
+        Schema::table('announcements', function (Blueprint $table) {
             $table->dropColumn(['type', 'location']);
-            
+
         });
     }
 };
