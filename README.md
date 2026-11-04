@@ -1,5 +1,5 @@
 # ⛪ System Zarządzania Parafią (Lokalna Wersja)
-
+##parafia-olbierzowice.pl
 Lokalna aplikacja webowa stworzona na potrzeby parafii, łącząca publiczny portal informacyjny z zabezpieczonym panelem administracyjnym. Projekt opiera się na architekturze SPA z wykorzystaniem Inertia.js.
 
 ---
