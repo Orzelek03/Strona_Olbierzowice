@@ -2,19 +2,50 @@ import { Head } from "@inertiajs/react";
 import React from "react";
 import ParishLayout from "@/layouts/ParishLayout";
 
-export default function Welcome() {
+const TIMELINE_MILESTONES = [
+    { year: "1325–1327", label: "Pierwsza wzmianka w wykazach świętopietrza" },
+    { year: "1468", label: "Budowa drewnianego kościoła gotyckiego" },
+    { year: "1632", label: "Objęcie parafii przez dominikanów z Klimontowa" },
+    { year: "1910", label: "Rozpoczęcie budowy obecnej świątyni" },
+    { year: "1935", label: "Uroczysta konsekracja kościoła św. Wawrzyńca" },
+    { year: "2026", label: "Jubileusz 700-lecia parafii" },
+];
+
+export default function History() {
     return (
         <ParishLayout showpic={false}>
             <Head title="Historia Parafii" />
 
-            <div className="max-w-4xl mx-auto w-full">
-                <h1 className="text-3xl font-bold uppercase tracking-widest text-center mb-8 text-stone-900 border-b border-[#cca572]/30 pb-6">
-                    Historia Parafii w Olbierzowicach
-                </h1>
+            <div className="max-w-4xl mx-auto w-full space-y-8">
+                <header className="text-center space-y-2 border-b border-parish-border pb-6">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-parish-gold-text">
+                        Dziedzictwo Pokoleń &middot; 1326 – 2026
+                    </span>
+                    <h1 className="font-serif text-3xl sm:text-4xl font-bold text-parish-navy">
+                        Historia Parafii w Olbierzowicach
+                    </h1>
+                </header>
 
-                <article className="bg-white p-8 md:p-12 rounded shadow-sm border-t-4 border-[#cca572] text-stone-700 leading-relaxed text-justify space-y-6">
+                {/* Oś czasu kluczowych dat */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    {TIMELINE_MILESTONES.map((item) => (
+                        <div
+                            key={item.year}
+                            className="bg-white rounded-xl border border-parish-border p-3.5 text-center shadow-xs"
+                        >
+                            <div className="font-serif font-bold text-base text-parish-navy">
+                                {item.year}
+                            </div>
+                            <p className="text-[11px] leading-snug text-stone-600 mt-1">
+                                {item.label}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+                <article className="bg-white p-6 sm:p-10 md:p-12 rounded-xl shadow-sm border border-parish-border border-t-4 border-t-parish-navy text-[#38312b] text-base sm:text-[17px] leading-relaxed space-y-8">
                     <section>
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3 pb-2 border-b border-parish-border/70">
                             Początki parafii
                         </h2>
                         <p>
@@ -45,18 +76,19 @@ export default function Welcome() {
                             pomiędzy Albertem, plebanem z Olbierzowic, a
                             Mikołajem, właścicielem Jurkowic. W XV wieku parafia
                             obejmowała rozległy obszar. Jan Długosz w swoim
-                            monumentalnym dziele Liber beneficiorum dioecesis
-                            Cracoviensis wymienia wśród miejscowości należących
-                            wówczas do parafii m.in. Olbierzowice, Nawodzice,
-                            Jurkowice, Klimontów, Konary, Szymanowice, Pełczyce,
-                            Rybnice, Witowice i Nową Wieś. Zasięg ówczesnej
-                            parafii pokazuje, jak ważnym ośrodkiem życia
-                            religijnego były Olbierzowice.
+                            monumentalnym dziele{" "}
+                            <em>Liber beneficiorum dioecesis Cracoviensis</em>{" "}
+                            wymienia wśród miejscowości należących wówczas do
+                            parafii m.in. Olbierzowice, Nawodzice, Jurkowice,
+                            Klimontów, Konary, Szymanowice, Pełczyce, Rybnice,
+                            Witowice i Nową Wieś. Zasięg ówczesnej parafii
+                            pokazuje, jak ważnym ośrodkiem życia religijnego
+                            były Olbierzowice.
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section>
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3 pb-2 border-b border-parish-border/70">
                             Dawne świątynie
                         </h2>
                         <p>
@@ -93,8 +125,8 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section>
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3 pb-2 border-b border-parish-border/70">
                             Parafia w czasach reformacji
                         </h2>
                         <p>
@@ -118,17 +150,16 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10 overflow-hidden">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section className="overflow-hidden">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-4 pb-2 border-b border-parish-border/70">
                             Koniec starego kościoła
                         </h2>
 
-                        {/* ZDJĘCIE Z ZEWNĄTRZ - Zmienić nazwę i upewnić się, że plik jest w public/images/ */}
-                        <figure className="float-none lg:float-right lg:w-1/2 lg:ml-6 mb-6">
+                        <figure className="float-none lg:float-right lg:w-1/2 lg:ml-6 mb-5">
                             <img
                                 src="/images/Historia_1.png"
                                 alt="Stary, modrzewiowy kościół w Olbierzowicach i zwożony kamień na budowę nowego"
-                                className="w-full rounded shadow-md border-4 border-white"
+                                className="w-full rounded-lg shadow-md border border-parish-border"
                             />
                             <figcaption className="text-xs text-stone-500 italic mt-2 text-center">
                                 Drewniany kościół rozebrany w 1910 r. i
@@ -166,8 +197,8 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section>
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3 pb-2 border-b border-parish-border/70">
                             Budowa obecnego kościoła
                         </h2>
                         <p>
@@ -183,7 +214,7 @@ export default function Welcome() {
                             gzymsów i częściowo przykryto dachówką. Wybuch wojny
                             w 1914 roku przerwał jednak budowę. Wznowiono ją
                             dopiero w 1920 roku z inicjatywy proboszcza ks.
-                            Julian Lipińskiego.
+                            Juliana Lipińskiego.
                         </p>
                         <p className="mt-4">
                             Uroczysta konsekracja kościoła odbyła się 14
@@ -195,10 +226,23 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section className="overflow-hidden">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-4 pb-2 border-b border-parish-border/70">
                             Kościół św. Wawrzyńca
                         </h2>
+
+                        <figure className="float-none lg:float-right lg:w-5/12 lg:ml-6 mb-5">
+                            <img
+                                src="/images/kosciol-zewnatrz.jpg"
+                                alt="Obecny neogotycki kościół pw. św. Wawrzyńca w Olbierzowicach"
+                                className="w-full rounded-lg shadow-md border border-parish-border"
+                            />
+                            <figcaption className="text-xs text-stone-500 italic mt-2 text-center">
+                                Neogotycki kościół pw. św. Wawrzyńca z
+                                64-metrową wieżą.
+                            </figcaption>
+                        </figure>
+
                         <p>
                             Obecna świątynia została wzniesiona w stylu
                             neogotyckim jako monumentalna budowla trójnawowa. Do
@@ -217,17 +261,16 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10 overflow-hidden">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section className="overflow-hidden">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-4 pb-2 border-b border-parish-border/70">
                             Zabytki dawnej świątyni
                         </h2>
 
-                        {/* ZDJĘCIE Z WEWNĄTRZ - Zmienić nazwę i upewnić się, że plik jest w public/images/ */}
-                        <figure className="float-none lg:float-left lg:w-5/12 lg:mr-6 mb-6">
+                        <figure className="float-none lg:float-left lg:w-5/12 lg:mr-6 mb-5">
                             <img
                                 src="/images/Historia_2.png"
                                 alt="Wnętrze starego kościoła drewnianego przed rozbiórką"
-                                className="w-full rounded shadow-md border-4 border-white grayscale"
+                                className="w-full rounded-lg shadow-md border border-parish-border grayscale"
                             />
                             <figcaption className="text-xs text-stone-500 italic mt-2 text-center">
                                 Wnętrze drewnianej świątyni przed rozbiórką.
@@ -255,18 +298,17 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section>
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3 pb-2 border-b border-parish-border/70">
                             Kaplica w Nawodzicach
                         </h2>
                         <p>
-                            Ważnym miejscem życia religijnego parafii jest
-                            również Nawodzice, gdzie znajduje się filialna
-                            kaplica pw. Matki Bożej Królowej Polski. Obecna
-                            kaplica została wybudowana w 1987 roku dzięki
-                            staraniom ówczesnego proboszcza ks. Andrzeja
-                            Wołczyńskiego oraz ofiarnej pracy mieszkańców
-                            Nawodzic.
+                            Ważnym miejscem życia religijnego parafii są również
+                            Nawodzice, gdzie znajduje się filialna kaplica pw.
+                            Matki Bożej Królowej Polski. Obecna kaplica została
+                            wybudowana w 1987 roku dzięki staraniom ówczesnego
+                            proboszcza ks. Andrzeja Wołczyńskiego oraz ofiarnej
+                            pracy mieszkańców Nawodzic.
                         </p>
                         <p className="mt-4">
                             Historia religijna Nawodzic jest jednak znacznie
@@ -276,10 +318,23 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section className="overflow-hidden">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-4 pb-2 border-b border-parish-border/70">
                             Parafia w XX i XXI wieku oraz Odnowienie Świątyni
                         </h2>
+
+                        <figure className="float-none lg:float-left lg:w-5/12 lg:mr-6 mb-5">
+                            <img
+                                src="/images/oltarz-glowny.jpg"
+                                alt="Odnowiony ołtarz główny i prezbiterium kościoła w Olbierzowicach"
+                                className="w-full rounded-lg shadow-md border border-parish-border"
+                            />
+                            <figcaption className="text-xs text-stone-500 italic mt-2 text-center">
+                                Odnowione prezbiterium i neogotycki ołtarz
+                                główny.
+                            </figcaption>
+                        </figure>
+
                         <p>
                             W pierwszej połowie XX wieku parafia obejmowała
                             rozległy obszar i liczyła kilka tysięcy wiernych. W
@@ -300,8 +355,8 @@ export default function Welcome() {
                         </p>
                     </section>
 
-                    <section className="mt-10 bg-stone-50 p-6 rounded border-l-4 border-[#cca572]">
-                        <h2 className="text-xl font-bold text-stone-900 uppercase tracking-wide mb-3">
+                    <section className="bg-parish-sand/70 p-6 sm:p-8 rounded-xl border-l-4 border-parish-gold">
+                        <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy mb-3">
                             Siedem wieków wspólnoty
                         </h2>
                         <p>
@@ -320,7 +375,7 @@ export default function Welcome() {
                             historii. Dziś parafia pozostaje żywą wspólnotą,
                             której centrum stanowi kościół św. Wawrzyńca.
                         </p>
-                        <p className="mt-4 font-bold text-stone-800 italic">
+                        <p className="mt-4 font-serif font-semibold text-parish-navy italic">
                             Siedem wieków historii zobowiązuje. Przeszłość jest
                             dziedzictwem, teraźniejszość – odpowiedzialnością, a
                             przyszłość – zadaniem kolejnych pokoleń.

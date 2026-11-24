@@ -8,34 +8,17 @@ use App\Models\Album;
 use App\Models\Announcement;
 use App\Models\Intention;
 use App\Models\Post;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     $aktualnosci = Post::where('is_published', true)->with('album.photos')->latest()->paginate(4);
 
-    /*$slowo = Cache::remember('slowo_dzisiejsze', now()->addHours(12), function () {
-    try{
-    $response = Http::withoutVeryfing()->timeout(3)->get('https://brewiarz.pl/rss/czyt.xml');
-    if ($response -> successful()){
-        $xml = simplexml_load_string($response->body());
-        $tytul = (string) $xml -> channel -> item[0] -> title;
-        $fragment = explode(' - ', $tytul);
-        return isset($fragment[1]) ? "Czytania: " . $fragment[1] : $tytul;
-    }
-    } catch (\exception $e){
-
-    }
-    return 'Sprawdź czytania w Niezbędniku niedzielnym';
-    });
-    */
     return Inertia::render('Welcome', ['posts' => $aktualnosci]);
 })->name('glowna');
 
 Route::get('/aktualnosci/{id}', function ($id) {
-    $post = Post::with('album.photos')->findOrFail($id);
+    $post = Post::where('is_published', true)->with('album.photos')->findOrFail($id);
 
     return Inertia::render('PostShow', ['post' => $post]);
 })->name('post.show');
@@ -45,21 +28,36 @@ Route::get('/ogloszenia', function () {
 })->name('ogloszenia');
 
 Route::get('/ogloszenia/olbierzowice', function () {
-    $ogloszenia = Announcement::where('location', 'Olbierzowice')->where('location', 'Olbierzowice')->latest()->paginate(5);
+    $ogloszenia = Announcement::where('type', 'ogloszenie')
+        ->where('location', 'Olbierzowice')
+        ->where('is_published', true)
+        ->latest()
+        ->paginate(5);
 
-    return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
-        'title' => 'Ogłoszenia - Olbierzowice']);
+    return Inertia::render('AnnouncementsShow', [
+        'announcements' => $ogloszenia,
+        'title' => 'Ogłoszenia - Olbierzowice',
+    ]);
 })->name('ogloszenia.olbierzowice');
 
 Route::get('/ogloszenia/nawodzice', function () {
-    $ogloszenia = Announcement::where('location', 'Nawodzice')->where('location', 'Nawodzice')->latest()->paginate(5);
+    $ogloszenia = Announcement::where('type', 'ogloszenie')
+        ->where('location', 'Nawodzice')
+        ->where('is_published', true)
+        ->latest()
+        ->paginate(5);
 
-    return Inertia::render('AnnouncementsShow', ['announcements' => $ogloszenia,
-        'title' => 'Ogłoszenia - Nawodzice']);
+    return Inertia::render('AnnouncementsShow', [
+        'announcements' => $ogloszenia,
+        'title' => 'Ogłoszenia - Nawodzice',
+    ]);
 })->name('ogloszenia.nawodzice');
 
 Route::get('/katechezy', function () {
-    $katechezy = Announcement::where('type', 'katecheza')->latest()->paginate(5);
+    $katechezy = Announcement::where('type', 'katecheza')
+        ->where('is_published', true)
+        ->latest()
+        ->paginate(5);
 
     return Inertia::render('AnnouncementsShow', [
         'announcements' => $katechezy,
@@ -90,7 +88,7 @@ Route::get('/galeria/{id}', function ($id) {
 })->name('galeria.album');
 
 Route::get('/intencje', function () {
-    $intentions = Intention::orderBy('title')->get();
+    $intentions = Intention::latest()->get();
 
     return Inertia::render('Intentions', ['intentions' => $intentions]);
 })->name('intencje');

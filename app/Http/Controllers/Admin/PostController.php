@@ -90,7 +90,7 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($post->image_path && ! str_replace_with($post->image_path, 'http')) {
+            if ($post->image_path && ! str_starts_with($post->image_path, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $post->image_path));
             }
             $path = $request->file('image')->store('posts/images', 'public');
@@ -103,19 +103,17 @@ class PostController extends Controller
         $post->save();
 
         if ($request->hasFile('photos')) {
-            if (! $post->album_id) {
+            $album = $post->album_id ? Album::find($post->album_id) : null;
+            if (! $album) {
                 $album = Album::create([
                     'title' => $post->title,
                     'event_date' => now()->toDateString(),
                     'cover_image' => $post->image_path,
                 ]);
                 $post->update(['album_id' => $album->id]);
-            } else {
-                $album = Album::find($post->album_id);
             }
-            $startingOrder = $album->photos()->max('sort_order') !== null
-            ? $album->photos()->max('sort_order') + 1
-            : 0;
+            $maxOrder = $album->photos()->max('sort_order');
+            $startingOrder = $maxOrder !== null ? $maxOrder + 1 : 0;
             foreach ($request->file('photos') as $index => $photoFile) {
                 $photoPath = '/storage/'.$photoFile->store('albums/'.$album->id.'/photos', 'public');
                 Photo::create([
@@ -131,7 +129,7 @@ class PostController extends Controller
 
     public function delete($id)
     {
-        $post = Post::findorFail($id);
+        $post = Post::findOrFail($id);
         if ($post->image_path && ! str_starts_with($post->image_path, 'http')) {
             $imagePath = str_replace('/storage/', '', $post->image_path);
             Storage::disk('public')->delete($imagePath);
@@ -148,8 +146,14 @@ class PostController extends Controller
             'ids.*' => 'integer|exists:posts,id',
         ]);
 
-        Post::whereIn('id', $request->ids)->delete();
+        $posts = Post::whereIn('id', $request->ids)->get();
+        foreach ($posts as $post) {
+            if ($post->image_path && ! str_starts_with($post->image_path, 'http')) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $post->image_path));
+            }
+            $post->delete();
+        }
 
-        return redirect()->back()->with('success', 'Zaznaczone Posty zostały usunięte pomyślnie.');
+        return redirect()->back()->with('success', 'Zaznaczone posty zostały usunięte pomyślnie.');
     }
 }

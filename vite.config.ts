@@ -13,7 +13,13 @@ export default defineConfig({
             refresh: true,
             fonts: [
                 bunny("Instrument Sans", {
-                    weights: [400, 500, 600],
+                    weights: [400, 500, 600, 700],
+                    subsets: ["latin", "latin-ext"],
+                }),
+                bunny("Lora", {
+                    weights: [400, 500, 600, 700],
+                    styles: ["normal", "italic"],
+                    subsets: ["latin", "latin-ext"],
                 }),
             ],
         }),

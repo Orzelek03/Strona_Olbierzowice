@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('album_id')->nullable()->constrainted('albums')->nullOnDelete();
+            $table->foreignId('album_id')->nullable()->constrained('albums')->nullOnDelete();
         });
     }
 

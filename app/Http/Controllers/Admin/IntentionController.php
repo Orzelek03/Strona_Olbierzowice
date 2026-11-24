@@ -11,9 +11,7 @@ class IntentionController extends Controller
 {
     public function index()
     {
-
-        $intentions = Intention::orderBy('title', 'desc')
-            ->orderBy('title', 'desc')->paginate(15);
+        $intentions = Intention::latest()->paginate(15);
 
         return Inertia::render('admin/Intentions/Index', ['intentions' => $intentions]);
     }
@@ -58,7 +56,7 @@ class IntentionController extends Controller
 
     public function delete($id)
     {
-        $intention = Intention::findorFail($id);
+        $intention = Intention::findOrFail($id);
         $intention->delete();
 
         return redirect()->back()->with('success', 'Intencja została usunięta.');

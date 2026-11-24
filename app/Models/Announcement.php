@@ -17,4 +17,8 @@ class Announcement extends Model
         'type',
         'location',
     ];
+
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 }

@@ -1,8 +1,7 @@
 import { Head, useForm, Link } from "@inertiajs/react";
+import { ArrowLeft } from "lucide-react";
 import React from "react";
 import ReactQuill from "react-quill-new";
-import ParishLayout from "../../../layouts/ParishLayout";
-// @ts-expect-error brak typów dla stylów quilla
 import "react-quill-new/dist/quill.snow.css";
 
 export default function Create() {
@@ -30,74 +29,75 @@ export default function Create() {
     };
 
     return (
-        <ParishLayout showpic={false}>
+        <div className="p-4 sm:p-6 w-full">
             <Head title="Dodaj nową intencję" />
 
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
-                <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-4">
-                    <h1 className="text-xl font-bold uppercase tracking-wider text-stone-800">
-                        Dodaj nową intencję
-                    </h1>
-                    <Link
-                        href="/admin/intencje"
-                        className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
-                    >
-                        &laquo; Powrót do listy
-                    </Link>
+            <div className="w-full bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-parish-border border-t-4 border-t-parish-navy">
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-parish-border pb-5">
+                    <div>
+                        <Link
+                            href="/admin/intencje"
+                            className="inline-flex items-center gap-1.5 text-parish-gold-text hover:text-parish-navy text-xs font-semibold uppercase tracking-wider mb-1 transition-colors"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Powrót do listy intencji</span>
+                        </Link>
+                        <h1 className="font-serif text-2xl font-bold text-parish-navy">
+                            Dodaj nową intencję
+                        </h1>
+                    </div>
                 </div>
 
                 <form onSubmit={submit} className="flex flex-col gap-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-stone-700 mb-2 uppercase tracking-wide">
-                                Tytuł (np. Intencje Mszalne 19.10 - 25.10)
-                            </label>
-                            <input
-                                type="text"
-                                value={data.title}
-                                onChange={(e) =>
-                                    setData("title", e.target.value)
-                                }
-                                className="w-full border-stone-300 rounded focus:border-[#dcb98a] focus:ring-[#dcb98a] shadow-sm"
-                                placeholder="Wpisz tytuł..."
+                    <div>
+                        <label className="block text-xs font-bold text-parish-navy mb-2 uppercase tracking-wider">
+                            Tytuł (np. Intencje Mszalne 19.10 – 25.10)
+                        </label>
+                        <input
+                            type="text"
+                            value={data.title}
+                            onChange={(e) => setData("title", e.target.value)}
+                            className="w-full border border-parish-border rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-parish-gold focus:border-parish-gold focus:outline-none text-[#231f1b]"
+                            placeholder="Wpisz tytuł..."
+                        />
+                        {errors.title && (
+                            <span className="text-red-600 text-xs mt-1.5 block">
+                                {errors.title}
+                            </span>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-parish-navy mb-2 uppercase tracking-wider">
+                            Treść intencji
+                        </label>
+                        <div className="bg-white text-[#231f1b]">
+                            <ReactQuill
+                                theme="snow"
+                                value={data.content}
+                                onChange={(val) => setData("content", val)}
+                                modules={modules}
+                                className="h-[420px] pb-12"
                             />
-                            {errors.title && (
-                                <span className="text-red-500 text-sm mt-1">
-                                    {errors.title}
-                                </span>
-                            )}
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-stone-700 mb-2 uppercase tracking-wide">
-                                Treść intencji (Wklej jako tekst)
-                            </label>
-                            <div className="bg-white">
-                                <ReactQuill
-                                    theme="snow"
-                                    value={data.content}
-                                    onChange={(val) => setData("content", val)}
-                                    modules={modules}
-                                    className="h-96 pb-12"
-                                />
-                            </div>
-                            {errors.content && (
-                                <span className="text-red-500 text-sm mt-1">
-                                    {errors.content}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex justify-start mt-4">
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="px-8 py-3 bg-[#cbb085] text-white font-bold tracking-wider uppercase text-sm rounded shadow hover:bg-[#bba075] transition-colors disabled:opacity-50"
-                            >
-                                Dodaj intencję
-                            </button>
-                        </div>
+                        {errors.content && (
+                            <span className="text-red-600 text-xs mt-1.5 block">
+                                {errors.content}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-parish-border">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="px-7 py-3 bg-parish-navy hover:bg-parish-navy-dark text-white font-semibold tracking-wide text-sm rounded-lg shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                            {processing ? "Zapisywanie..." : "Dodaj intencję"}
+                        </button>
                     </div>
                 </form>
             </div>
-        </ParishLayout>
+        </div>
     );
 }

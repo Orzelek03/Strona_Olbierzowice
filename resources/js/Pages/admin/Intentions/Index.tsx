@@ -1,11 +1,12 @@
 import { Head, Link, router } from "@inertiajs/react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
-import ParishLayout from "../../../layouts/ParishLayout";
 
 interface Intention {
     id: number;
     title: string;
     content: string;
+    created_at?: string;
 }
 
 interface PaginationLink {
@@ -24,6 +25,14 @@ interface IntentionsProps {
     };
 }
 
+function stripHtml(html: string): string {
+    return html
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 export default function Index({ intentions, flash }: IntentionsProps) {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -39,7 +48,7 @@ export default function Index({ intentions, flash }: IntentionsProps) {
         if (selectedIds.includes(id)) {
             setSelectedIds(
                 selectedIds.filter((selectedId) => selectedId !== id),
-            ); // Poprawiony błąd!
+            );
         } else {
             setSelectedIds([...selectedIds, id]);
         }
@@ -52,7 +61,6 @@ export default function Index({ intentions, flash }: IntentionsProps) {
             )
         ) {
             router.delete("/admin/intencje/wiele", {
-                // Poprawiona ścieżka!
                 data: { ids: selectedIds },
                 onSuccess: () => setSelectedIds([]),
             });
@@ -66,56 +74,60 @@ export default function Index({ intentions, flash }: IntentionsProps) {
     };
 
     return (
-        <ParishLayout showpic={false}>
+        <div className="p-4 sm:p-6 w-full">
             <Head title="Zarządzaj intencjami" />
-            <div className="max-w-5xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
-                <div className="flex justify-between items-center mb-8 border-b border-stone-200 pb-4">
-                    <Link
-                        href="/admin/dashboard"
-                        className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
-                    >
-                        &laquo; Kokpit
-                    </Link>
-                    <h1 className="text-2xl font-bold uppercase tracking-wider text-stone-800">
-                        Intencje
-                    </h1>
+            <div className="w-full bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-parish-border border-t-4 border-t-parish-navy">
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-parish-border pb-5">
+                    <div>
+                        <Link
+                            href="/admin/dashboard"
+                            className="inline-flex items-center gap-1.5 text-parish-gold-text hover:text-parish-navy text-xs font-semibold uppercase tracking-wider mb-1 transition-colors"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Kokpit</span>
+                        </Link>
+                        <h1 className="font-serif text-2xl font-bold text-parish-navy">
+                            Intencje Mszalne
+                        </h1>
+                    </div>
                     <Link
                         href="/admin/intencje/dodaj"
-                        className="bg-[#cca572] text-white px-4 py-2 rounded text-sm font-bold uppercase tracking-wider hover:bg-stone-900 transition-colors"
+                        className="inline-flex items-center gap-2 bg-parish-navy text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-parish-navy-dark transition-colors shadow-xs"
                     >
-                        + Dodaj nową intencję
+                        <Plus className="w-4 h-4 text-parish-gold-light" />
+                        <span>Dodaj nową intencję</span>
                     </Link>
                 </div>
 
                 {selectedIds.length > 0 && (
-                    <div className="bg-red-50 p-4 mb-4 rounded flex justify-between items-center border border-red-100">
+                    <div className="bg-red-50 p-4 mb-5 rounded-lg flex justify-between items-center border border-red-200">
                         <span className="text-red-800 font-semibold text-sm">
                             Zaznaczono elementów: {selectedIds.length}
                         </span>
                         <button
                             onClick={handleLotDelete}
-                            className="bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors"
+                            className="inline-flex items-center gap-1.5 bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer"
                         >
-                            Usuń zaznaczone
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Usuń zaznaczone</span>
                         </button>
                     </div>
                 )}
 
                 {flash?.success && (
-                    <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 font-semibold rounded">
+                    <div className="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-600 text-emerald-800 font-medium rounded-r-lg text-sm">
                         {flash.success}
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto rounded-lg border border-parish-border">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-stone-100 text-stone-700 uppercase text-xs tracking-wider border-b border-stone-200">
-                                {/* Dodano kolumnę na checkbox w nagłówku */}
+                            <tr className="bg-parish-sand/70 text-parish-navy uppercase text-xs font-bold tracking-wider border-b border-parish-border">
                                 <th className="p-4 w-12 text-center">
                                     <input
                                         type="checkbox"
-                                        className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                        className="w-4 h-4 accent-parish-navy cursor-pointer"
                                         onChange={handleSelectAll}
                                         checked={
                                             intentions.data.length > 0 &&
@@ -125,21 +137,21 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                                     />
                                 </th>
                                 <th className="p-4">Tytuł</th>
-                                <th className="p-4">Intencje</th>
+                                <th className="p-4">Podgląd treści</th>
+                                <th className="p-4 text-right">Akcje</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-parish-border/60 text-sm">
                             {intentions.data.length > 0 ? (
                                 intentions.data.map((intention) => (
                                     <tr
                                         key={intention.id}
-                                        className="border-b border-stone-100 hover:bg-stone-50 transition-colors"
+                                        className="hover:bg-parish-cream/60 transition-colors"
                                     >
-                                        {/* Dodano checkbox w wierszu */}
                                         <td className="p-4 text-center">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                                className="w-4 h-4 accent-parish-navy cursor-pointer"
                                                 checked={selectedIds.includes(
                                                     intention.id,
                                                 )}
@@ -148,43 +160,44 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                                                 }
                                             />
                                         </td>
-                                        <td className="p-4 font-semibold text-stone-800 whitespace-nowrap">
+                                        <td className="p-4 font-semibold text-parish-navy whitespace-nowrap">
                                             {intention.title}
                                         </td>
-                                        <td className="p-4 text-stone-700">
-                                            <div
-                                                className="Line-clamp-2"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: intention.content,
-                                                }}
-                                            ></div>
+                                        <td className="p-4 text-stone-600 max-w-xl">
+                                            <p className="line-clamp-2">
+                                                {stripHtml(intention.content)}
+                                            </p>
                                         </td>
                                         <td className="p-4 text-right whitespace-nowrap">
-                                            <Link
-                                                href={`/admin/intencje/${intention.id}/edytuj`}
-                                                className="text-[#cca572] font-bold text-sm uppercase hover:text-stone-900 mr-4 transition-colors"
-                                            >
-                                                Edytuj
-                                            </Link>
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(intention.id)
-                                                }
-                                                className="text-red-500 font-bold text-sm uppercase hover:text-red-700 transition-colors"
-                                            >
-                                                Usuń
-                                            </button>
+                                            <div className="inline-flex items-center gap-2">
+                                                <Link
+                                                    href={`/admin/intencje/${intention.id}/edytuj`}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-parish-border bg-parish-cream hover:bg-parish-navy text-parish-navy hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors"
+                                                >
+                                                    <Pencil className="w-3.5 h-3.5" />
+                                                    <span>Edytuj</span>
+                                                </Link>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            intention.id,
+                                                        )
+                                                    }
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-600 text-red-700 hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                    <span>Usuń</span>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
                                     <td
-                                        colSpan={6}
-                                        className="p-8 text-center text-stone-500 font-semibold"
+                                        colSpan={4}
+                                        className="p-10 text-center text-stone-500 italic"
                                     >
-                                        {" "}
-                                        {/* Zmiana colSpan z 5 na 6 */}
                                         Brak dodanych intencji
                                     </td>
                                 </tr>
@@ -194,7 +207,7 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                 </div>
 
                 {intentions.links && intentions.links.length > 3 && (
-                    <div className="flex flex-wrap justify-center gap-1 mt-8">
+                    <div className="flex flex-wrap justify-center gap-1.5 mt-6">
                         {intentions.links.map((link, index) => {
                             const translatedLabel = link.label
                                 .replace("Previous", "Poprzednia")
@@ -202,12 +215,12 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                             const isUnclickable = !link.url || link.active;
 
                             return isUnclickable ? (
-                                <div
+                                <span
                                     key={index}
-                                    className={`px-4 py-2 text-sm border flex items-center justify-center ${
+                                    className={`px-3.5 py-1.5 text-sm rounded-lg border flex items-center justify-center ${
                                         link.active
-                                            ? "bg-[#dcb98a] text-white border-[dcb98a] font-bold shadow-sm"
-                                            : "bg-stone-50 text-stone-400 border-stone-200 cursor-not-allowed"
+                                            ? "bg-parish-navy text-white border-parish-navy font-semibold"
+                                            : "bg-parish-sand/50 text-stone-400 border-parish-border cursor-not-allowed"
                                     }`}
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
@@ -217,7 +230,7 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                                 <Link
                                     key={index}
                                     href={link.url ?? undefined}
-                                    className="px-4 py-2 text-sm border bg-white text-stone-600 border-stone-200 hover:bg-stone-50 transition-all flex items-center justify-center cursor-pointer"
+                                    className="px-3.5 py-1.5 text-sm rounded-lg border bg-white text-parish-navy border-parish-border hover:bg-parish-sand transition-all flex items-center justify-center cursor-pointer"
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
                                     }}
@@ -227,6 +240,6 @@ export default function Index({ intentions, flash }: IntentionsProps) {
                     </div>
                 )}
             </div>
-        </ParishLayout>
+        </div>
     );
 }

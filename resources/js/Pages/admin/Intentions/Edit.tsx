@@ -1,8 +1,7 @@
 import { Head, useForm, Link } from "@inertiajs/react";
+import { ArrowLeft } from "lucide-react";
 import React from "react";
 import ReactQuill from "react-quill-new";
-import ParishLayout from "../../../layouts/ParishLayout";
-// @ts-expect-error brak typów dla stylów quilla
 import "react-quill-new/dist/quill.snow.css";
 
 interface Intention {
@@ -25,6 +24,7 @@ export default function Edit({ intention }: EditProps) {
         e.preventDefault();
         put(`/admin/intencje/${intention.id}`);
     };
+
     const modules = {
         toolbar: [
             [{ header: [1, 2, 3, false] }],
@@ -33,76 +33,82 @@ export default function Edit({ intention }: EditProps) {
             [{ align: [] }],
             ["clean"],
         ],
+        clipboard: {
+            matchVisual: false,
+        },
     };
 
     return (
-        <ParishLayout showpic={false}>
+        <div className="p-4 sm:p-6 w-full">
             <Head title="Edytuj intencję" />
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
-                <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-4">
-                    <h1 className="text-xl font-bold uppercase tracking-wider text-stone-800">
-                        Edytuj intencję mszalną
-                    </h1>
-                    <Link
-                        href="/admin/intencje"
-                        className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
-                    >
-                        &laquo; Powrót do listy
-                    </Link>
+
+            <div className="w-full bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-parish-border border-t-4 border-t-parish-navy">
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-parish-border pb-5">
+                    <div>
+                        <Link
+                            href="/admin/intencje"
+                            className="inline-flex items-center gap-1.5 text-parish-gold-text hover:text-parish-navy text-xs font-semibold uppercase tracking-wider mb-1 transition-colors"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Powrót do listy intencji</span>
+                        </Link>
+                        <h1 className="font-serif text-2xl font-bold text-parish-navy">
+                            Edytuj intencję mszalną
+                        </h1>
+                    </div>
                 </div>
 
                 <form onSubmit={submit} className="flex flex-col gap-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-stone-700 uppercase mb-2">
-                                Tytuł
-                            </label>
-                            <input
-                                type="title"
-                                value={data.title}
-                                style={{ colorScheme: "light" }}
-                                onChange={(e) =>
-                                    setData("title", e.target.value)
-                                }
-                                className="w-full border border-stone-300 rounded p-2 focus:ring-2 focus:ring-[#cca572] focus:outline-none"
-                            />
-
-                            {errors.title && (
-                                <div className="text-red-500 text-xs mt-1">
-                                    {errors.title}
-                                </div>
-                            )}
-                        </div>
-                    </div>
                     <div>
-                        <label className="block text-sm font-bold text-stone-700 uppercase mb-2">
+                        <label className="block text-xs font-bold text-parish-navy uppercase tracking-wider mb-2">
+                            Tytuł
+                        </label>
+                        <input
+                            type="text"
+                            value={data.title}
+                            style={{ colorScheme: "light" }}
+                            onChange={(e) => setData("title", e.target.value)}
+                            className="w-full border border-parish-border rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-parish-gold focus:border-parish-gold focus:outline-none text-[#231f1b]"
+                        />
+
+                        {errors.title && (
+                            <div className="text-red-600 text-xs mt-1.5">
+                                {errors.title}
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-parish-navy uppercase tracking-wider mb-2">
                             Treść intencji
                         </label>
-                        <div className="bg-white">
+                        <div className="bg-white text-[#231f1b]">
                             <ReactQuill
                                 theme="snow"
                                 value={data.content}
                                 onChange={(val) => setData("content", val)}
                                 modules={modules}
-                                className="h-96 pb-12"
+                                className="h-[420px] pb-12"
                             />
                         </div>
                         {errors.content && (
-                            <span className="text-red-500 text-sm mt-1">
+                            <span className="text-red-600 text-xs mt-1.5 block">
                                 {errors.content}
                             </span>
                         )}
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="mt-4 bg-[#cca572] text-white font-bold uppercase tracking-widest py-3 px-6 rounded hover:bg-stone-900 transition-colors disabled:opacity-50 w-full md:w-auto self-start"
-                    >
-                        {processing ? "Zapisywanie..." : "Zapisz zmiany"}
-                    </button>
+                    <div className="flex justify-end pt-4 border-t border-parish-border">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="px-7 py-3 bg-parish-navy hover:bg-parish-navy-dark text-white font-semibold tracking-wide text-sm rounded-lg shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                            {processing ? "Zapisywanie..." : "Zapisz zmiany"}
+                        </button>
+                    </div>
                 </form>
             </div>
-        </ParishLayout>
+        </div>
     );
 }

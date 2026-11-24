@@ -6,10 +6,14 @@ import AppLayout from "@/layouts/app-layout";
 import AuthLayout from "@/layouts/auth-layout";
 import SettingsLayout from "@/layouts/settings/layout";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const rawAppName = import.meta.env.VITE_APP_NAME;
+const appName =
+    !rawAppName || rawAppName === "Laravel" || rawAppName === "parafia"
+        ? "Parafia św. Wawrzyńca w Olbierzowicach"
+        : rawAppName;
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => (title ? `${title} – ${appName}` : appName),
     layout: (name) => {
         switch (true) {
             case name.startsWith("auth/"):
@@ -35,7 +39,7 @@ createInertiaApp({
         );
     },
     progress: {
-        color: "#4B5563",
+        color: "#c69b4f",
     },
 });
 

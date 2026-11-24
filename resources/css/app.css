@@ -12,6 +12,18 @@
         "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+    --font-serif: "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+
+    --color-parish-navy: #162d4d;
+    --color-parish-navy-dark: #0f2038;
+    --color-parish-navy-light: #1f3d66;
+    --color-parish-gold: #c69b4f;
+    --color-parish-gold-light: #e4c583;
+    --color-parish-gold-text: #8b6224;
+    --color-parish-crimson: #8c2632;
+    --color-parish-cream: #f8f5ef;
+    --color-parish-sand: #efe7d8;
+    --color-parish-border: #e5dccb;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -62,74 +74,74 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    --background: #f8f5ef;
+    --foreground: #231f1b;
+    --card: #ffffff;
+    --card-foreground: #231f1b;
+    --popover: #ffffff;
+    --popover-foreground: #231f1b;
+    --primary: #162d4d;
+    --primary-foreground: #f8f5ef;
+    --secondary: #efe7d8;
+    --secondary-foreground: #162d4d;
+    --muted: #f2ece0;
+    --muted-foreground: #665c52;
+    --accent: #efe7d8;
+    --accent-foreground: #162d4d;
+    --destructive: #991b1b;
+    --destructive-foreground: #ffffff;
+    --border: #e5dccb;
+    --input: #ddd2be;
+    --ring: #c69b4f;
+    --chart-1: #162d4d;
+    --chart-2: #c69b4f;
+    --chart-3: #8c2632;
+    --chart-4: #4b6b94;
+    --chart-5: #8b6224;
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    --sidebar: #162d4d;
+    --sidebar-foreground: #f3ede2;
+    --sidebar-primary: #c69b4f;
+    --sidebar-primary-foreground: #0f2038;
+    --sidebar-accent: #1f3d66;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #25436e;
+    --sidebar-ring: #c69b4f;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --background: #121822;
+    --foreground: #f4efe6;
+    --card: #182231;
+    --card-foreground: #f4efe6;
+    --popover: #182231;
+    --popover-foreground: #f4efe6;
+    --primary: #d4aa5a;
+    --primary-foreground: #0f2038;
+    --secondary: #223147;
+    --secondary-foreground: #f4efe6;
+    --muted: #1e2a3c;
+    --muted-foreground: #b2a799;
+    --accent: #223147;
+    --accent-foreground: #f4efe6;
+    --destructive: #b91c1c;
+    --destructive-foreground: #fef2f2;
+    --border: #2a3b55;
+    --input: #2a3b55;
+    --ring: #d4aa5a;
+    --chart-1: #d4aa5a;
+    --chart-2: #5b84b8;
+    --chart-3: #c74b59;
+    --chart-4: #8fa9c9;
+    --chart-5: #e6c67c;
+    --sidebar: #0f2038;
+    --sidebar-foreground: #f3ede2;
+    --sidebar-primary: #d4aa5a;
+    --sidebar-primary-foreground: #0f2038;
+    --sidebar-accent: #1c3558;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #1e3759;
+    --sidebar-ring: #d4aa5a;
 }
 
 @layer base {
@@ -137,19 +149,27 @@
         @apply border-border;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         @apply bg-background text-foreground;
     }
 }
-.parish-bg {
-    background-color: #e7e5e4;
+
+/* Stylowanie edytora Quill w panelu administratora */
+.ql-toolbar.ql-snow {
+    border-color: #ddd2be !important;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-color: #f8f5ef;
 }
 
-@media (min-width: 768px) {
-    .parish-bg {
-        background-image: url("~!/images/tlo2.jpeg");
-        background-attachment: fixed;
-        background-size: cover;
-        background-position: center;
-    }
+.ql-container.ql-snow {
+    border-color: #ddd2be !important;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    font-family: var(--font-sans) !important;
+    font-size: 0.95rem !important;
 }

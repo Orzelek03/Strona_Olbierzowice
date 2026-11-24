@@ -1,6 +1,7 @@
 import { Head, Link, router } from "@inertiajs/react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import React from "react";
-import ParishLayout from "@/layouts/ParishLayout";
+
 interface Album {
     id: number;
     title: string;
@@ -22,63 +23,75 @@ interface PaginatedAlbums {
 
 interface IndexProps {
     albums: PaginatedAlbums;
+    flash?: {
+        success?: string;
+    };
 }
 
-export default function Index({ albums }: IndexProps) {
+export default function Index({ albums, flash }: IndexProps) {
     const handleDelete = (id: number) => {
         if (
             confirm("Czy na pewno chcesz usunąć album wraz z jego zawartością?")
         ) {
             router.delete(`/admin/albumy/${id}`, {
                 preserveScroll: true,
-                onSuccess: () => alert("Album został usunięty"),
                 onError: () => alert("Wystąpił błąd podczas usuwania"),
             });
         }
     };
 
     return (
-        <ParishLayout showpic={false}>
+        <div className="p-4 sm:p-6 w-full">
             <Head title="Zarządzanie Albumami" />
 
-            <div className="max-w-5xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
-                <div className="flex justify-between items-center mb-8 border-b border-stone-200 pb-4">
-                    <Link
-                        href="/admin/dashboard"
-                        className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
-                    >
-                        &laquo; Kokpit
-                    </Link>
-                    <h1 className="text-2xl font-bold uppercase tracking-wider text-stone-800">
-                        Albumy w galerii
-                    </h1>
+            <div className="w-full bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-parish-border border-t-4 border-t-parish-navy">
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-parish-border pb-5">
+                    <div>
+                        <Link
+                            href="/admin/dashboard"
+                            className="inline-flex items-center gap-1.5 text-parish-gold-text hover:text-parish-navy text-xs font-semibold uppercase tracking-wider mb-1 transition-colors"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Kokpit</span>
+                        </Link>
+                        <h1 className="font-serif text-2xl font-bold text-parish-navy">
+                            Albumy w galerii
+                        </h1>
+                    </div>
                     <Link
                         href="/admin/albumy/dodaj"
-                        className="bg-[#cca572] text-white px-4 py-2 rounded text-sm font-bold uppercase tracking-wider hover:bg-stone-900 transition-colors"
+                        className="inline-flex items-center gap-2 bg-parish-navy text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-parish-navy-dark transition-colors shadow-xs"
                     >
-                        + Dodaj nowy Album
+                        <Plus className="w-4 h-4 text-parish-gold-light" />
+                        <span>Dodaj nowy album</span>
                     </Link>
                 </div>
 
-                <div className="overflow-x-auto">
+                {flash?.success && (
+                    <div className="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-600 text-emerald-800 font-medium rounded-r-lg text-sm">
+                        {flash.success}
+                    </div>
+                )}
+
+                <div className="overflow-x-auto rounded-lg border border-parish-border">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-stone-200 text-stone-500 text-xs uppercase tracking-wider">
-                                <th className="p-3">Okładka</th>
-                                <th className="p-3">Tytuł</th>
-                                <th className="p-3">Data wydarzenia</th>
-                                <th className="p-3">Liczba zdjęć</th>
-                                <th className="p-3 text-right">Akcje</th>
+                            <tr className="bg-parish-sand/70 text-parish-navy text-xs font-bold uppercase tracking-wider border-b border-parish-border">
+                                <th className="p-4">Okładka</th>
+                                <th className="p-4">Tytuł</th>
+                                <th className="p-4">Data wydarzenia</th>
+                                <th className="p-4">Liczba zdjęć</th>
+                                <th className="p-4 text-right">Akcje</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-stone-100 text-stone-700 text-sm">
+                        <tbody className="divide-y divide-parish-border/60 text-sm">
                             {albums.data.map((album) => (
                                 <tr
                                     key={album.id}
-                                    className="hover:bg-stone-50"
+                                    className="hover:bg-parish-cream/60 transition-colors"
                                 >
-                                    <td className="p-3">
-                                        <div className="w-16 h-12 bg-stone-200 rounded overflow-hidden">
+                                    <td className="p-4">
+                                        <div className="w-16 h-12 bg-parish-sand rounded-md overflow-hidden border border-parish-border">
                                             {album.cover_image ? (
                                                 <img
                                                     src={album.cover_image}
@@ -92,28 +105,38 @@ export default function Index({ albums }: IndexProps) {
                                             )}
                                         </div>
                                     </td>
-                                    <td className="p-3 font-bold text-stone-900">
+                                    <td className="p-4 font-semibold text-parish-navy">
                                         {album.title}
                                     </td>
-                                    <td className="p-3">{album.event_date}</td>
-                                    <td className="p-3">
-                                        {album.photos_count || 0} szt.
+                                    <td className="p-4 text-stone-600 whitespace-nowrap">
+                                        {new Date(
+                                            album.event_date,
+                                        ).toLocaleDateString("pl-PL")}
                                     </td>
-                                    <td className="p-3 text-right space-x-2 whitespace-nowrap">
-                                        <Link
-                                            href={`/admin/albumy/${album.id}/edytuj`}
-                                            className="inline-block text-stone-600 hover:text-stone-900 font-semibold text-xs uppercase tracking-wider border border-stone-200 px-3 py-1 rounded hover:bg-stone-50 transition-colors"
-                                        >
-                                            Edytuj
-                                        </Link>
-                                        <button
-                                            onClick={() =>
-                                                handleDelete(album.id)
-                                            }
-                                            className="text-red-600 hover:text-red-900 font-semibold text-xs uppercase tracking-wider border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition-colors"
-                                        >
-                                            Usuń
-                                        </button>
+                                    <td className="p-4 whitespace-nowrap">
+                                        <span className="px-2.5 py-1 rounded-full bg-parish-sand text-parish-navy text-xs font-semibold">
+                                            {album.photos_count || 0} szt.
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-right whitespace-nowrap">
+                                        <div className="inline-flex items-center gap-2">
+                                            <Link
+                                                href={`/admin/albumy/${album.id}/edytuj`}
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-parish-border bg-parish-cream hover:bg-parish-navy text-parish-navy hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors"
+                                            >
+                                                <Pencil className="w-3.5 h-3.5" />
+                                                <span>Edytuj</span>
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(album.id)
+                                                }
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-600 text-red-700 hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                                <span>Usuń</span>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -121,23 +144,23 @@ export default function Index({ albums }: IndexProps) {
                     </table>
 
                     {albums.data.length === 0 && (
-                        <div className="text-center text-stone-400 py-12 italic">
-                            Brak albumów w bazie danych
+                        <div className="text-center text-stone-500 py-10 italic">
+                            Brak albumów w bazie danych.
                         </div>
                     )}
                 </div>
 
                 {albums.links && albums.links.length > 3 && (
-                    <div className="flex flex-wrap justify-center gap-1 mt-6 pt-4 border-t border-stone-200">
+                    <div className="flex flex-wrap justify-center gap-1.5 mt-6">
                         {albums.links.map((link, index) => {
                             const translatedLabel = link.label
-                                .replace("Previous", "&laquo;")
-                                .replace("Next", "&raquo;");
+                                .replace("Previous", "Poprzednia")
+                                .replace("Next", "Następna");
 
                             return !link.url ? (
                                 <span
                                     key={index}
-                                    className="px-3 py-1 text-sm border bg-stone-50 text-stone-400 border-stone-200"
+                                    className="px-3.5 py-1.5 text-sm rounded-lg border bg-parish-sand/50 text-stone-400 border-parish-border"
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
                                     }}
@@ -146,10 +169,10 @@ export default function Index({ albums }: IndexProps) {
                                 <Link
                                     key={index}
                                     href={link.url}
-                                    className={`px-3 py-1 text-sm border flex items-center justify-center transition-all ${
+                                    className={`px-3.5 py-1.5 text-sm rounded-lg border flex items-center justify-center transition-all ${
                                         link.active
-                                            ? "bg-[#cca572] text-white border-[#cca572] font-bold shadow-sm"
-                                            : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                                            ? "bg-parish-navy text-white border-parish-navy font-semibold"
+                                            : "bg-white text-parish-navy border-parish-border hover:bg-parish-sand"
                                     }`}
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
@@ -160,6 +183,6 @@ export default function Index({ albums }: IndexProps) {
                     </div>
                 )}
             </div>
-        </ParishLayout>
+        </div>
     );
 }

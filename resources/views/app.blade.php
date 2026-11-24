@@ -4,8 +4,8 @@
     <head>
         
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ in_array(config('app.name'), ['Laravel', 'parafia', null, ''], true) ? 'Parafia św. Wawrzyńca w Olbierzowicach' : config('app.name') }}</title>
 
         {{-- Skrypt i style do Dark Mode --}}
         <script>
@@ -24,7 +24,9 @@
             html.dark { background-color: oklch(0.145 0 0); }
         </style>
 
-        <link rel="icon" href="/ikona.ico" sizes="any">
+        <meta name="theme-color" content="#162d4d">
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="icon" href="/favicon.ico" sizes="32x32">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         @fonts

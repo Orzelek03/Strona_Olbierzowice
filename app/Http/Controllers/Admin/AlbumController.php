@@ -41,33 +41,25 @@ class AlbumController extends Controller
         $album->event_date = $request->event_date;
 
         if ($request->hasFile('cover_image')) {
-            if ($album->cover_image) {
+            if ($album->cover_image && ! str_starts_with($album->cover_image, 'http')) {
                 $oldCoverPath = str_replace('/storage/', '', $album->cover_image);
                 Storage::disk('public')->delete($oldCoverPath);
             }
-            $path = $request->file('cover_image')->store('albums/covers', 'public');
+            $path = $request->file('cover_image')->store('albums/'.$album->id, 'public');
             $album->cover_image = '/storage/'.$path;
         }
 
-        if ($request->hasFile('cover_image')) {
-            if ($album->cover_image) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $album->cover_image));
-            }
-            $path = $request->file('cover_image')->store('albums/covers', 'public');
-            $album->cover_image = '/storage/'.$path;
-        }
-
-        $album->title = $request->title;
-        $album->event_date = $request->event_date;
         $album->save();
 
         if ($request->hasFile('photos')) {
+            $maxOrder = $album->photos()->max('sort_order');
+            $startingOrder = $maxOrder !== null ? $maxOrder + 1 : 0;
             foreach ($request->file('photos') as $index => $photoFile) {
                 $photoPath = '/storage/'.$photoFile->store('albums/'.$album->id.'/photos', 'public');
                 Photo::create([
                     'album_id' => $album->id,
                     'image_path' => $photoPath,
-                    'sort_order' => $index,
+                    'sort_order' => $startingOrder + $index,
                 ]);
             }
         }
@@ -131,6 +123,7 @@ class AlbumController extends Controller
                 }
             }
         }
+        $album->posts()->update(['album_id' => null]);
         $album->photos()->delete();
         $album->delete();
 

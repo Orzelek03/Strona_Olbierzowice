@@ -1,299 +1,478 @@
 import { Link, usePage } from "@inertiajs/react";
+import {
+    BookOpen,
+    Clock,
+    ExternalLink,
+    Home,
+    Images,
+    Landmark,
+    Mail,
+    MapPin,
+    Megaphone,
+    Menu,
+    Phone,
+    X,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import React, { useState } from "react";
+import AppLogoIcon from "@/components/app-logo-icon";
 
 type ParishLayoutProps = {
     children: ReactNode;
     showpic?: boolean;
+    hero?: ReactNode;
 };
 
-export default function ParishLayout({ children, showpic }: ParishLayoutProps) {
+const NAV_ITEMS = [
+    { label: "Główna", href: "/", icon: Home, exact: true },
+    { label: "Intencje", href: "/intencje", icon: BookOpen, exact: false },
+    {
+        label: "Ogłoszenia",
+        href: "/ogloszenia",
+        icon: Megaphone,
+        exact: false,
+        extraPrefixes: ["/katechezy"],
+    },
+    { label: "Historia", href: "/historia", icon: Landmark, exact: false },
+    { label: "Galeria", href: "/galeria", icon: Images, exact: false },
+    { label: "Kontakt", href: "/kontakt", icon: Mail, exact: false },
+];
+
+const EXTERNAL_LINKS = [
+    { label: "Cmentarz parafialny", href: "https://mogily.pl/olbierzowice" },
+    { label: "Czytania na dziś", href: "https://niezbednik.niedziela.pl/" },
+    { label: "Diecezja Sandomierska", href: "https://diecezjasandomierska.pl/" },
+];
+
+export default function ParishLayout({
+    children,
+    showpic,
+    hero,
+}: ParishLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { auth } = usePage().props as any;
+    const page = usePage();
+    const { auth } = page.props as { auth?: { user?: unknown } };
+    const currentPath = page.url.split("?")[0];
+
+    const isItemActive = (item: (typeof NAV_ITEMS)[number]) => {
+        if (item.exact) {
+            return currentPath === item.href;
+        }
+        if (
+            currentPath === item.href ||
+            currentPath.startsWith(`${item.href}/`)
+        ) {
+            return true;
+        }
+        if (item.extraPrefixes) {
+            return item.extraPrefixes.some(
+                (prefix) =>
+                    currentPath === prefix ||
+                    currentPath.startsWith(`${prefix}/`),
+            );
+        }
+        return false;
+    };
 
     return (
-        <>
-            {/*Background Style for mobile/desktop*/}
-            <style
-                dangerouslySetInnerHTML={{
-                    __html: `
-                .parish-custom-bg {
-                    background-color: #e7e5e4;
-                }
-                @media (min-width: 1024px) {
-                    .parish-custom-bg {
-                        background-image: url('/images/tlo2.jpeg');
-                        background-attachment: fixed;
-                        background-size: cover;
-                        background-position: center;
-                    }
-                }
-            `,
-                }}
-            />
+        <div className="min-h-screen flex flex-col font-sans bg-parish-cream text-[#231f1b] selection:bg-parish-gold/30 selection:text-parish-navy">
+            {/* GÓRNY PASEK TOŻSAMOŚCI PARAFII (DESKTOP) */}
+            <header className="hidden lg:block bg-gradient-to-r from-parish-navy-dark via-parish-navy to-[#1b365d] text-[#f8f5ef] border-b border-parish-gold/40">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-4 group focus:outline-none"
+                    >
+                        <div className="w-12 h-12 rounded-xl bg-parish-navy-dark/80 border border-parish-gold/60 flex items-center justify-center shadow-md group-hover:border-parish-gold-light transition-colors">
+                            <AppLogoIcon className="w-8 h-8 text-parish-gold-light" />
+                        </div>
+                        <div>
+                            <div className="font-serif text-2xl font-semibold tracking-wide text-white leading-tight group-hover:text-parish-gold-light transition-colors">
+                                Parafia pw. św. Wawrzyńca
+                            </div>
+                            <div className="flex items-center gap-3 mt-0.5">
+                                <span className="h-px w-6 bg-parish-gold/70" />
+                                <span className="text-xs uppercase tracking-[0.25em] text-parish-gold-light font-medium">
+                                    w Olbierzowicach
+                                </span>
+                                <span className="h-px w-6 bg-parish-gold/70" />
+                            </div>
+                        </div>
+                    </Link>
 
-            <div className="min-h-screen flex flex-col font-sans text-stone-800 parish-custom-bg">
-                {/* MOBILE UPSIDE BAR */}
-                <div className="lg:hidden bg-[#dcb98a] p-3 flex justify-end items-center shadow-md sticky top-0 z-30">
+                    <div className="text-right">
+                        <p className="font-serif italic text-lg text-parish-gold-light leading-snug">
+                            700 lat wiary i wspólnej historii
+                        </p>
+                        <p className="text-xs text-[#c7d3e3] tracking-wider uppercase mt-0.5">
+                            1326 – 2026 &middot; Diecezja Sandomierska
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            {/* PRZYKLEJONA NAWIGACJA (DESKTOP + MOBILE) */}
+            <div className="sticky top-0 z-30 bg-parish-sand/95 backdrop-blur-md border-b border-parish-gold/45 shadow-sm">
+                {/* Mobile header bar */}
+                <div className="lg:hidden bg-parish-navy text-white px-4 py-3 flex items-center justify-between gap-3">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-2.5 min-w-0"
+                    >
+                        <div className="w-9 h-9 rounded-lg bg-parish-navy-dark border border-parish-gold/55 flex items-center justify-center shrink-0">
+                            <AppLogoIcon className="w-6 h-6 text-parish-gold-light" />
+                        </div>
+                        <div className="truncate">
+                            <div className="font-serif font-semibold text-base leading-tight truncate">
+                                Parafia św. Wawrzyńca
+                            </div>
+                            <div className="text-[11px] uppercase tracking-[0.18em] text-parish-gold-light">
+                                Olbierzowice
+                            </div>
+                        </div>
+                    </Link>
                     <button
                         onClick={() => setIsMobileMenuOpen(true)}
-                        className="text-stone-900 focus:outline-none p-2 cursor-pointer hover:bg-white/20 rounded transition-colors"
+                        className="p-2 rounded-lg text-parish-gold-light hover:bg-white/10 transition-colors cursor-pointer shrink-0"
                         aria-label="Otwórz menu"
                     >
-                        <svg
-                            className="w-8 h-8"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                        </svg>
+                        <Menu className="w-6 h-6" />
                     </button>
                 </div>
 
-                {/* Quitin menu after clicking on any place*/}
-                <div
-                    className={`lg:hidden fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 ${
-                        isMobileMenuOpen
-                            ? "opacity-100 visible"
-                            : "opacity-0 invisible"
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                />
-
-                {/* MOBILE SIDE MENU */}
-                <div
-                    className={`lg:hidden fixed inset-y-0 right-0 z-50 w-3/4 sm:w-80 bg-[#e8d5bc] shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out ${
-                        isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-                    }`}
+                {/* Desktop navigation */}
+                <nav
+                    aria-label="Nawigacja główna"
+                    className="hidden lg:flex max-w-7xl mx-auto px-6 py-2 items-center justify-between gap-2"
                 >
-                    <div className="flex justify-end p-4 border-b border-[#cbb085]/40">
-                        <button
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="text-stone-900 p-2 cursor-pointer hover:bg-white/30 rounded transition-colors"
-                            aria-label="Zamknij menu"
-                        >
-                            <svg
-                                className="w-8 h-8"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
+                    <div className="flex items-center gap-1.5">
+                        {NAV_ITEMS.map((item) => {
+                            const Icon = item.icon;
+                            const active = isItemActive(item);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 ${
+                                        active
+                                            ? "bg-parish-navy text-white shadow-sm"
+                                            : "text-parish-navy hover:bg-white/80 hover:text-parish-navy-dark"
+                                    }`}
+                                >
+                                    <Icon
+                                        className={`w-4 h-4 ${
+                                            active
+                                                ? "text-parish-gold-light"
+                                                : "text-parish-gold-text"
+                                        }`}
+                                    />
+                                    <span>{item.label}</span>
+                                </Link>
+                            );
+                        })}
                     </div>
 
-                    <div className="overflow-y-auto p-6 flex flex-col gap-8 flex-1">
-                        <nav className="flex flex-col gap-3 font-bold uppercase text-sm tracking-wide text-center">
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Strona główna
-                            </Link>
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/historia"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Historia
-                            </Link>
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/intencje"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Intencje
-                            </Link>
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/ogloszenia"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Ogłoszenia
-                            </Link>
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/kontakt"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Kontakt
-                            </Link>
-                            <Link
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                href="/galeria"
-                                className="py-3 bg-white/50 border border-[#cbb085]/50 rounded active:bg-[#dcb98a]"
-                            >
-                                Galeria
-                            </Link>
-                        </nav>
-
-                        <div className="flex flex-col gap-3 text-center">
-                            <h3 className="font-bold text-stone-900 uppercase tracking-widest mb-1 text-xs">
-                                Linki Zewnętrzne
-                            </h3>
-                            <a
-                                href="https://mogily.pl/olbierzowice"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
-                            >
-                                Cmentarz
-                            </a>
-                            <a
-                                href="https://niezbednik.niedziela.pl/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
-                            >
-                                Czytania na dziś
-                            </a>
-                            <a
-                                href="https://diecezjasandomierska.pl/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="py-2.5 bg-[#cca572]/30 border border-[#cbb085] rounded font-semibold uppercase active:bg-[#dcb98a]"
-                            >
-                                Diecezja
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                {/* MAIN SITE */}
-                <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 flex flex-col gap-y-4 flex-1 my-6">
-                    {/* Nawigacja Desktopowa */}
-                    <nav className="hidden lg:flex bg-[#dcb98a] h-14 flex-row w-full font-bold uppercase text-base tracking-wide shadow-sm">
-                        <Link
-                            href="/"
-                            className="flex-1 text-center flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Strona główna
-                        </Link>
-                        <Link
-                            href="/historia"
-                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Historia
-                        </Link>
-                        <Link
-                            href="/intencje"
-                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Intencje
-                        </Link>
-                        <Link
-                            href="/ogloszenia"
-                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Ogłoszenia
-                        </Link>
-                        <Link
-                            href="/kontakt"
-                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Kontakt
-                        </Link>
-                        <Link
-                            href="/galeria"
-                            className="flex-1 flex items-center justify-center h-14 px-2 hover:text-[#dcb98a] hover:bg-white border-l border-[#cbb085]/30 transition-colors duration-200"
-                        >
-                            Galeria
-                        </Link>
-                    </nav>
-
-                    {/* Baner 700 lat */}
-                    {showpic && (
-                        <div className="bg-[#cca876] flex items-center justify-center overflow-hidden shadow-sm">
-                            <img
-                                src="/images/700lat.jpeg"
-                                alt="700 lat Parafii"
-                                className="hidden lg:block w-full h-auto"
-                            />
-                            <img
-                                src="/images/baner_mobile.jpeg"
-                                alt="700 lat Parafii"
-                                className="block lg:hidden w-full h-auto"
-                            />
-                        </div>
-                    )}
-
-                    <main className="bg-[#e8d5bc] p-4 sm:p-8 flex flex-col min-h-[800px] shadow-sm">
-                        <div className="mt-4 flex-1">{children}</div>
-                    </main>
-                </div>
-
-                {/* FOOTER */}
-                <footer className="w-full bg-[#dcb98a] pt-8 pb-6 px-4 flex flex-col items-center justify-center mt-auto shadow-inner z-10 gap-6 border-t-4 border-[#cbb085]/50">
-                    <div className="flex flex-wrap justify-center gap-6 md:gap-12 items-center font-bold uppercase tracking-widest text-sm text-stone-900 w-full max-w-5xl">
+                    <div className="flex items-center gap-4 text-xs font-semibold text-parish-navy/80">
                         <a
-                            href="https://mogily.pl/olbierzowice"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-white transition-colors duration-200"
+                            href="tel:+48158661350"
+                            className="inline-flex items-center gap-1.5 hover:text-parish-navy transition-colors"
                         >
-                            Cmentarz
+                            <Phone className="w-3.5 h-3.5 text-parish-gold-text" />
+                            <span>15 866 13 50</span>
                         </a>
-                        <a
-                            href="https://niezbednik.niedziela.pl/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-white transition-colors duration-200"
-                        >
-                            Czytania na dziś
-                        </a>
-                        <a
-                            href="https://diecezjasandomierska.pl/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-white transition-colors duration-200"
-                        >
-                            Diecezja
-                        </a>
+                        <span className="h-3.5 w-px bg-parish-gold/50" />
                         <a
                             href="https://www.facebook.com/profile.php?id=100089487466133#"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#1877F2] hover:text-white transition-colors duration-200"
-                            aria-label="Facebook"
+                            className="inline-flex items-center gap-1.5 text-parish-navy/80 hover:text-[#1877F2] transition-colors"
+                            aria-label="Facebook parafii"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                className="w-9 h-9"
+                                className="w-4 h-4"
                             >
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
+                            <span>Facebook</span>
                         </a>
                     </div>
-
-                    <div className="flex flex-col sm:flex-row items-center text-center justify-center gap-2 sm:gap-4 font-bold uppercase text-xs tracking-widest text-stone-800 border-t border-[#cbb085]/60 pt-6 w-full max-w-3xl">
-                        <span>© 2026 Parafia. Wszelkie prawa zastrzeżone.</span>
-                        <span className="hidden sm:inline text-stone-600">
-                            |
-                        </span>
-                        <Link
-                            href={auth?.user ? "/admin/dashboard" : "/login"}
-                            className="hover:text-white transition-colors duration-200"
-                        >
-                            {auth?.user ? "Panel Administratora" : "Logowanie"}
-                        </Link>
-                    </div>
-                </footer>
+                </nav>
             </div>
-        </>
+
+            {/* OVERLAY MENU MOBILNEGO */}
+            <div
+                className={`lg:hidden fixed inset-0 bg-parish-navy-dark/70 backdrop-blur-xs z-40 transition-opacity duration-300 ${
+                    isMobileMenuOpen
+                        ? "opacity-100 visible"
+                        : "opacity-0 invisible"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* SZUFLADA MENU MOBILNEGO */}
+            <aside
+                className={`lg:hidden fixed inset-y-0 right-0 z-50 w-4/5 max-w-xs bg-parish-cream shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out border-l border-parish-gold/40 ${
+                    isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+            >
+                <div className="bg-parish-navy text-white px-5 py-4 flex items-center justify-between border-b border-parish-gold/40">
+                    <div className="flex items-center gap-2.5">
+                        <AppLogoIcon className="w-6 h-6 text-parish-gold-light" />
+                        <span className="font-serif font-semibold text-base">
+                            Menu Parafii
+                        </span>
+                    </div>
+                    <button
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="p-1.5 rounded-lg text-parish-gold-light hover:bg-white/10 transition-colors cursor-pointer"
+                        aria-label="Zamknij menu"
+                    >
+                        <X className="w-6 h-6" />
+                    </button>
+                </div>
+
+                <div className="overflow-y-auto p-5 flex flex-col gap-6 flex-1">
+                    <nav className="flex flex-col gap-2">
+                        {NAV_ITEMS.map((item) => {
+                            const Icon = item.icon;
+                            const active = isItemActive(item);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    href={item.href}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm transition-colors ${
+                                        active
+                                            ? "bg-parish-navy text-white shadow-sm"
+                                            : "bg-white text-parish-navy border border-parish-border hover:bg-parish-sand"
+                                    }`}
+                                >
+                                    <Icon
+                                        className={`w-4 h-4 ${
+                                            active
+                                                ? "text-parish-gold-light"
+                                                : "text-parish-gold-text"
+                                        }`}
+                                    />
+                                    <span>{item.label}</span>
+                                </Link>
+                            );
+                        })}
+                    </nav>
+
+                    <div className="border-t border-parish-border pt-5 flex flex-col gap-2.5">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-parish-gold-text px-1">
+                            Linki zewnętrzne
+                        </h3>
+                        {EXTERNAL_LINKS.map((ext) => (
+                            <a
+                                key={ext.href}
+                                href={ext.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-parish-sand/70 border border-parish-border text-sm font-medium text-parish-navy hover:bg-parish-sand transition-colors"
+                            >
+                                <span>{ext.label}</span>
+                                <ExternalLink className="w-3.5 h-3.5 text-parish-gold-text" />
+                            </a>
+                        ))}
+                    </div>
+
+                    <div className="mt-auto border-t border-parish-border pt-4 text-xs text-stone-600 space-y-1.5">
+                        <a
+                            href="tel:+48158661350"
+                            className="flex items-center gap-2 font-semibold text-parish-navy"
+                        >
+                            <Phone className="w-3.5 h-3.5 text-parish-gold-text" />
+                            15 866 13 50
+                        </a>
+                        <p className="flex items-center gap-2">
+                            <MapPin className="w-3.5 h-3.5 text-parish-gold-text shrink-0" />
+                            Olbierzowice 35, 27-640 Klimontów
+                        </p>
+                    </div>
+                </div>
+            </aside>
+
+            {/* OPCJONALNA SEKCJA HERO */}
+            {hero}
+
+            {/* BANER 700 LAT (jeśli użyty bez niestandardowego hero) */}
+            {showpic && !hero && (
+                <div className="bg-parish-navy-dark border-b border-parish-gold/40">
+                    <div className="max-w-7xl mx-auto">
+                        <img
+                            src="/images/700lat.jpeg"
+                            alt="700 lat Parafii pw. św. Wawrzyńca w Olbierzowicach"
+                            className="hidden lg:block w-full h-auto"
+                        />
+                        <img
+                            src="/images/baner_mobile.jpeg"
+                            alt="700 lat Parafii pw. św. Wawrzyńca w Olbierzowicach"
+                            className="block lg:hidden w-full h-auto"
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* GŁÓWNA ZAWARTOŚĆ */}
+            <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-1">
+                {children}
+            </main>
+
+            {/* STOPKA */}
+            <footer className="bg-gradient-to-b from-parish-navy to-parish-navy-dark text-[#dce3ee] border-t-2 border-parish-gold/75 mt-auto">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+                    {/* Kolumna 1: Dane kontaktowe */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-parish-navy-dark border border-parish-gold/55 flex items-center justify-center shrink-0">
+                                <AppLogoIcon className="w-6 h-6 text-parish-gold-light" />
+                            </div>
+                            <div>
+                                <h2 className="font-serif font-semibold text-lg text-white leading-tight">
+                                    Parafia pw. św. Wawrzyńca
+                                </h2>
+                                <p className="text-xs uppercase tracking-widest text-parish-gold-light">
+                                    w Olbierzowicach
+                                </p>
+                            </div>
+                        </div>
+
+                        <ul className="space-y-2.5 text-sm text-[#c8d4e5]">
+                            <li className="flex items-start gap-2.5">
+                                <MapPin className="w-4 h-4 text-parish-gold-light mt-0.5 shrink-0" />
+                                <span>
+                                    Olbierzowice 35, 27-640 Klimontów
+                                </span>
+                            </li>
+                            <li className="flex items-center gap-2.5">
+                                <Phone className="w-4 h-4 text-parish-gold-light shrink-0" />
+                                <a
+                                    href="tel:+48158661350"
+                                    className="hover:text-white transition-colors"
+                                >
+                                    15 866 13 50
+                                </a>
+                            </li>
+                            <li className="flex items-center gap-2.5">
+                                <Mail className="w-4 h-4 text-parish-gold-light shrink-0" />
+                                <a
+                                    href="mailto:kontakt@parafia-olbierzowice.pl"
+                                    className="hover:text-white transition-colors break-all"
+                                >
+                                    kontakt@parafia-olbierzowice.pl
+                                </a>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                                <Clock className="w-4 h-4 text-parish-gold-light mt-0.5 shrink-0" />
+                                <span>
+                                    Kancelaria: pon.–pt. po Mszy św. wieczornej,
+                                    sob. 9:00–10:00
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Kolumna 2: Nawigacja */}
+                    <div className="space-y-4">
+                        <h3 className="font-serif text-base font-semibold text-parish-gold-light uppercase tracking-wider">
+                            Na skróty
+                        </h3>
+                        <ul className="grid grid-cols-2 gap-y-2.5 gap-x-4 text-sm">
+                            {NAV_ITEMS.map((item) => (
+                                <li key={item.href}>
+                                    <Link
+                                        href={item.href}
+                                        className="text-[#c8d4e5] hover:text-parish-gold-light transition-colors"
+                                    >
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            ))}
+                            <li>
+                                <Link
+                                    href="/?powitanie=1"
+                                    className="text-[#c8d4e5] hover:text-parish-gold-light transition-colors"
+                                >
+                                    Słowo powitalne
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Kolumna 3: Linki zewnętrzne i społeczności */}
+                    <div className="space-y-4">
+                        <h3 className="font-serif text-base font-semibold text-parish-gold-light uppercase tracking-wider">
+                            Warto odwiedzić
+                        </h3>
+                        <ul className="space-y-2.5 text-sm">
+                            {EXTERNAL_LINKS.map((ext) => (
+                                <li key={ext.href}>
+                                    <a
+                                        href={ext.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-[#c8d4e5] hover:text-parish-gold-light transition-colors"
+                                    >
+                                        <span>{ext.label}</span>
+                                        <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                                    </a>
+                                </li>
+                            ))}
+                            <li className="pt-2">
+                                <a
+                                    href="https://www.facebook.com/profile.php?id=100089487466133#"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2.5 px-4 py-2 rounded-lg bg-white/10 hover:bg-[#1877F2] text-white text-sm font-medium transition-colors"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-4 h-4"
+                                    >
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                    </svg>
+                                    <span>Parafia na Facebooku</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Dolny pasek praw autorskich */}
+                <div className="border-t border-white/10 bg-parish-navy-dark/60">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#a8b8cf]">
+                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3">
+                            <span>
+                                &copy; {new Date().getFullYear()} Parafia pw. św.
+                                Wawrzyńca w Olbierzowicach.
+                            </span>
+                            <span className="hidden sm:inline opacity-40">
+                                |
+                            </span>
+                            <Link
+                                href={
+                                    auth?.user ? "/admin/dashboard" : "/login"
+                                }
+                                className="hover:text-parish-gold-light transition-colors font-medium"
+                            >
+                                {auth?.user
+                                    ? "Panel Administratora"
+                                    : "Logowanie"}
+                            </Link>
+                        </div>
+                        <p className="font-serif italic text-sm text-parish-gold-light">
+                            Bóg zapłać za odwiedziny!
+                        </p>
+                    </div>
+                </div>
+            </footer>
+        </div>
     );
 }

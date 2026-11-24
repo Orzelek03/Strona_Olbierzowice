@@ -13,6 +13,10 @@ class Post extends Model
 
     protected $fillable = ['title', 'content', 'image_path', 'is_published', 'album_id'];
 
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
+
     public function album()
     {
         return $this->belongsTo(Album::class);

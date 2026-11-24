@@ -1,5 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
-import React, { useState } from "react";
+import { ArrowLeft, Calendar, Images } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import ParishLayout from "@/layouts/ParishLayout";
 
 interface Photo {
@@ -27,127 +28,179 @@ interface PostShowProps {
 
 export default function PostShow({ post }: PostShowProps) {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-    console.log("Odebrane dane post:", post);
+
+    const photos: string[] = [];
+
+    if (post?.image_path) {
+        photos.push(post.image_path);
+    }
+
+    if (post?.album?.photos) {
+        post.album.photos.forEach((photo) => photos.push(photo.image_path));
+    }
+
+    useEffect(() => {
+        if (lightboxIndex === null) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setLightboxIndex(null);
+            } else if (e.key === "ArrowRight" && photos.length > 1) {
+                setLightboxIndex((prev) =>
+                    prev !== null ? (prev + 1) % photos.length : null,
+                );
+            } else if (e.key === "ArrowLeft" && photos.length > 1) {
+                setLightboxIndex((prev) =>
+                    prev !== null
+                        ? (prev - 1 + photos.length) % photos.length
+                        : null,
+                );
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [lightboxIndex, photos.length]);
 
     if (!post) {
         return (
             <ParishLayout showpic={false}>
-                <div className="p-10 text-center text-red-600 font-bold">
-                    Błąd: Brak danych artykułu lub wpis nie istnieje w bazie
+                <div className="p-10 text-center text-parish-crimson font-semibold bg-white rounded-xl border border-parish-border">
+                    Błąd: Brak danych artykułu lub wpis nie istnieje w bazie.
                 </div>
             </ParishLayout>
         );
     }
 
-    const Photos: string[] = [];
-
-    if (post.image_path) {
-        Photos.push(post.image_path);
-    }
-
-    if (post.album && post.album.photos) {
-        post.album.photos.forEach((photo) => Photos.push(photo.image_path));
-    }
-
     const closeLightbox = () => setLightboxIndex(null);
-    const nextImage = () => {
+    const nextImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex + 1) % Photos.length);
+            setLightboxIndex((lightboxIndex + 1) % photos.length);
         }
     };
-    const prevImage = () => {
+    const prevImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (lightboxIndex !== null) {
             setLightboxIndex(
-                (lightboxIndex - 1 + Photos.length) % Photos.length,
+                (lightboxIndex - 1 + photos.length) % photos.length,
             );
         }
     };
 
     return (
         <ParishLayout showpic={false}>
-            {/* Poprawiono wielkość liter i sposób przekazania zmiennej */}
             <Head title={post.title} />
 
-            <article className="flex flex-col gap-8 w-full mx-auto max-w-4xl bg-white p-6 md:p-10 shadow-sm border-t-4 border-[#dcb98a]">
-                <nav className="mb-2">
+            <div className="w-full mx-auto max-w-4xl">
+                <nav className="mb-5">
                     <Link
                         href="/"
-                        className="text-[#dcb98a] font-bold text-sm uppercase hover:text-stone-900 transition-colors"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-parish-gold-text hover:text-parish-navy transition-colors"
                     >
-                        « Powrót do aktualności
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>Powrót do aktualności</span>
                     </Link>
                 </nav>
-                <header className="border-b border-[#cbb085]/30 pb-6">
-                    <h1 className="text-3xl md:text-4xl font-bold text-stone-800 uppercase tracking-wide leading-tight mb-4">
-                        {post.title}
-                    </h1>
-                    <time className="text-sm font-semibold text-stone-500 tracking-wider">
-                        Dodano:{" "}
-                        {new Date(post.created_at).toLocaleDateString("pl-PL")}
-                    </time>
-                </header>
 
-                <div className="text-base md:text-lg leading-relaxed text-stone-700 text-justify whitespace-pre-wrap">
-                    {post.content}
-                </div>
-
-                {Photos.length > 0 && (
-                    <div className="mt-8 border-t border-stone-100 pt-8">
-                        <h3 className="text-lg font-bold text-stone-800 uppercase mb-4 tracking-wider">
-                            Fotorelacja
-                        </h3>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {Photos.map((imgSrc, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => setLightboxIndex(index)}
-                                    className="aspect-square cursor-pointer overflow-hidden rounded-sm group shadow-sm"
-                                >
-                                    <img
-                                        src={imgSrc}
-                                        alt={`Zdjęcie ${index + 1}`}
-                                        className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-80 transition-all duration-300"
-                                    />
-                                </div>
-                            ))}
+                <article className="bg-white rounded-xl border border-parish-border border-t-4 border-t-parish-navy shadow-sm p-6 sm:p-10 flex flex-col gap-7">
+                    <header className="border-b border-parish-border pb-6 space-y-3">
+                        <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-parish-gold-text">
+                            <Calendar className="w-4 h-4" />
+                            <time>
+                                Dodano:{" "}
+                                {new Date(post.created_at).toLocaleDateString(
+                                    "pl-PL",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    },
+                                )}
+                            </time>
                         </div>
+
+                        <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-parish-navy leading-snug">
+                            {post.title}
+                        </h1>
+                    </header>
+
+                    <div className="text-base sm:text-[17px] leading-relaxed text-[#38312b] whitespace-pre-wrap">
+                        {post.content}
                     </div>
-                )}
-            </article>
+
+                    {photos.length > 0 && (
+                        <section className="mt-4 border-t border-parish-border pt-7">
+                            <div className="flex items-center gap-2.5 mb-5">
+                                <Images className="w-5 h-5 text-parish-gold-text" />
+                                <h2 className="font-serif text-xl font-bold text-parish-navy">
+                                    Fotorelacja ({photos.length})
+                                </h2>
+                            </div>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+                                {photos.map((imgSrc, index) => (
+                                    <button
+                                        type="button"
+                                        key={index}
+                                        onClick={() => setLightboxIndex(index)}
+                                        className="aspect-square cursor-pointer overflow-hidden rounded-lg border border-parish-border group shadow-xs bg-parish-sand"
+                                    >
+                                        <img
+                                            src={imgSrc}
+                                            alt={`Zdjęcie ${index + 1}`}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </article>
+            </div>
 
             {lightboxIndex !== null && (
-                <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+                <div
+                    className="fixed inset-0 z-50 bg-parish-navy-dark/95 backdrop-blur-xs flex items-center justify-center"
+                    onClick={closeLightbox}
+                >
                     <button
                         onClick={closeLightbox}
-                        className="absolute top-6 right-6 text-white/70 hover:text-white text-4xl font-bold transition-colors z-50"
+                        aria-label="Zamknij podgląd"
+                        className="absolute top-6 right-6 text-white/80 hover:text-parish-gold-light text-4xl font-bold transition-colors z-50 cursor-pointer"
                     >
                         &times;
                     </button>
-                    <button
-                        onClick={prevImage}
-                        className="absolute left-4 md:left-10 text-white/70 hover:text-white text-5xl font-bold transition-colors px-4 py-8 z-50 select-none"
-                    >
-                        &#10094;
-                    </button>
+                    {photos.length > 1 && (
+                        <button
+                            onClick={prevImage}
+                            aria-label="Poprzednie zdjęcie"
+                            className="absolute left-3 md:left-10 text-white/75 hover:text-parish-gold-light text-5xl font-light transition-colors px-4 py-8 z-50 select-none cursor-pointer"
+                        >
+                            &#10094;
+                        </button>
+                    )}
 
                     <div className="w-full h-full p-4 md:p-16 flex items-center justify-center">
                         <img
-                            src={Photos[lightboxIndex]}
+                            src={photos[lightboxIndex]}
                             alt="Powiększone zdjęcie"
-                            className="max-w-full max-h-full object-contain rounded-md shadow-2xl"
+                            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
                         />
                     </div>
 
-                    <button
-                        onClick={nextImage}
-                        className="absolute right-4 md:right-10 text-white/70 hover:text-white text-5xl font-bold transition-colors px-4 py-8 z-50 select-none"
-                    >
-                        &#10095;
-                    </button>
-                    {/* Poprawiono brakujący myślnik w klasie tracking-widest */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest font-semibold">
-                        {lightboxIndex + 1} / {Photos.length}
+                    {photos.length > 1 && (
+                        <button
+                            onClick={nextImage}
+                            aria-label="Następne zdjęcie"
+                            className="absolute right-3 md:right-10 text-white/75 hover:text-parish-gold-light text-5xl font-light transition-colors px-4 py-8 z-50 select-none cursor-pointer"
+                        >
+                            &#10095;
+                        </button>
+                    )}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 text-sm tracking-widest font-semibold">
+                        {lightboxIndex + 1} / {photos.length}
                     </div>
                 </div>
             )}

@@ -1,6 +1,6 @@
 import { Head, Link, router } from "@inertiajs/react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
-import ParishLayout from "../../../layouts/ParishLayout";
 
 interface Post {
     id: number;
@@ -23,9 +23,12 @@ interface PaginatedPosts {
 
 interface IndexProps {
     posts: PaginatedPosts;
+    flash?: {
+        success?: string;
+    };
 }
 
-export default function Index({ posts }: IndexProps) {
+export default function Index({ posts, flash }: IndexProps) {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +58,7 @@ export default function Index({ posts }: IndexProps) {
             router.delete("/admin/aktualnosci/wiele", {
                 data: { ids: selectedIds },
                 preserveScroll: true,
-                onSuccess: () => {
-                    setSelectedIds([]);
-                    alert("Zaznaczone posty zostały usunięte");
-                },
+                onSuccess: () => setSelectedIds([]),
                 onError: () => alert("Wystąpił błąd podczas usuwania"),
             });
         }
@@ -68,59 +68,67 @@ export default function Index({ posts }: IndexProps) {
         if (confirm("Czy na pewno chcesz usunąć ten post?")) {
             router.delete(`/admin/aktualnosci/${id}`, {
                 preserveScroll: true,
-                onSuccess: () => alert("Post został usunięty"),
                 onError: () => alert("Wystąpił błąd podczas usuwania"),
             });
         }
     };
 
     return (
-        <ParishLayout showpic={false}>
+        <div className="p-4 sm:p-6 w-full">
             <Head title="Zarządzanie Aktualnościami" />
 
-            <div className="max-w-5xl mx-auto bg-white p-8 rounded shadow-sm border-t-4 border-[#cca572]">
-                <div className="flex justify-between items-center mb-8 border-b border-stone-200 pb-4">
-                    <Link
-                        href="/admin/dashboard"
-                        className="text-stone-500 hover:text-stone-800 text-sm font-semibold transition-colors"
-                    >
-                        &laquo; Kokpit
-                    </Link>
-                    <h1 className="text-2xl font-bold uppercase tracking-wider text-stone-800">
-                        Aktualności
-                    </h1>
+            <div className="w-full bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-parish-border border-t-4 border-t-parish-navy">
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-parish-border pb-5">
+                    <div>
+                        <Link
+                            href="/admin/dashboard"
+                            className="inline-flex items-center gap-1.5 text-parish-gold-text hover:text-parish-navy text-xs font-semibold uppercase tracking-wider mb-1 transition-colors"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Kokpit</span>
+                        </Link>
+                        <h1 className="font-serif text-2xl font-bold text-parish-navy">
+                            Aktualności
+                        </h1>
+                    </div>
                     <Link
                         href="/admin/aktualnosci/dodaj"
-                        className="bg-[#cca572] text-white px-4 py-2 rounded text-sm font-bold uppercase tracking-wider hover:bg-stone-900 transition-colors"
+                        className="inline-flex items-center gap-2 bg-parish-navy text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-parish-navy-dark transition-colors shadow-xs"
                     >
-                        + Dodaj nowy post
+                        <Plus className="w-4 h-4 text-parish-gold-light" />
+                        <span>Dodaj nowy post</span>
                     </Link>
                 </div>
 
-                {/* PASEK MASOWEGO USUWANIA */}
+                {flash?.success && (
+                    <div className="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-600 text-emerald-800 font-medium rounded-r-lg text-sm">
+                        {flash.success}
+                    </div>
+                )}
+
                 {selectedIds.length > 0 && (
-                    <div className="bg-red-50 p-4 mb-4 rounded flex justify-between items-center border border-red-100">
+                    <div className="bg-red-50 p-4 mb-5 rounded-lg flex justify-between items-center border border-red-200">
                         <span className="text-red-800 font-semibold text-sm">
                             Zaznaczono elementów: {selectedIds.length}
                         </span>
                         <button
                             onClick={handleLotDelete}
-                            className="bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors"
+                            className="inline-flex items-center gap-1.5 bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer"
                         >
-                            Usuń zaznaczone
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Usuń zaznaczone</span>
                         </button>
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto rounded-lg border border-parish-border">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-stone-200 text-stone-500 text-xs uppercase tracking-wider">
-                                {/* GŁÓWNY CHECKBOX */}
-                                <th className="p-3 w-12 text-center">
+                            <tr className="bg-parish-sand/70 text-parish-navy text-xs font-bold uppercase tracking-wider border-b border-parish-border">
+                                <th className="p-4 w-12 text-center">
                                     <input
                                         type="checkbox"
-                                        className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                        className="w-4 h-4 accent-parish-navy cursor-pointer"
                                         onChange={handleSelectAll}
                                         checked={
                                             posts.data.length > 0 &&
@@ -129,21 +137,23 @@ export default function Index({ posts }: IndexProps) {
                                         }
                                     />
                                 </th>
-                                <th className="p-3">Zdjęcia</th>
-                                <th className="p-3">Tytuł</th>
-                                <th className="p-3">Data utworzenia</th>
-                                <th className="p-3">Status</th>
-                                <th className="p-3 text-right">Akcje</th>
+                                <th className="p-4">Miniaturka</th>
+                                <th className="p-4">Tytuł</th>
+                                <th className="p-4">Data utworzenia</th>
+                                <th className="p-4">Status</th>
+                                <th className="p-4 text-right">Akcje</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-stone-100 text-stone-700 text-sm">
+                        <tbody className="divide-y divide-parish-border/60 text-sm">
                             {posts.data.map((post) => (
-                                <tr key={post.id} className="hover:bg-stone-50">
-                                    {/* INDYWIDUALNY CHECKBOX */}
-                                    <td className="p-3 text-center">
+                                <tr
+                                    key={post.id}
+                                    className="hover:bg-parish-cream/60 transition-colors"
+                                >
+                                    <td className="p-4 text-center">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4 accent-[#cca572] cursor-pointer"
+                                            className="w-4 h-4 accent-parish-navy cursor-pointer"
                                             checked={selectedIds.includes(
                                                 post.id,
                                             )}
@@ -152,8 +162,8 @@ export default function Index({ posts }: IndexProps) {
                                             }
                                         />
                                     </td>
-                                    <td className="p-3">
-                                        <div className="w-16 h-12 bg-stone-200 rounded overflow-hidden">
+                                    <td className="p-4">
+                                        <div className="w-16 h-12 bg-parish-sand rounded-md overflow-hidden border border-parish-border">
                                             {post.image_path ? (
                                                 <img
                                                     src={post.image_path}
@@ -167,40 +177,44 @@ export default function Index({ posts }: IndexProps) {
                                             )}
                                         </div>
                                     </td>
-                                    <td className="p-3 font-bold text-stone-900">
+                                    <td className="p-4 font-semibold text-parish-navy">
                                         {post.title}
                                     </td>
-                                    <td className="p-3">
+                                    <td className="p-4 text-stone-600 whitespace-nowrap">
                                         {new Date(
                                             post.created_at,
                                         ).toLocaleDateString("pl-PL")}
                                     </td>
-                                    <td className="p-3">
+                                    <td className="p-4 whitespace-nowrap">
                                         {post.is_published ? (
-                                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
+                                            <span className="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-semibold">
                                                 Opublikowany
                                             </span>
                                         ) : (
-                                            <span className="bg-stone-200 text-stone-600 px-2 py-1 rounded text-xs font-semibold">
+                                            <span className="bg-stone-200 text-stone-600 px-2.5 py-1 rounded-full text-xs font-semibold">
                                                 Ukryty
                                             </span>
                                         )}
                                     </td>
-                                    <td className="p-3 text-right space-x-2 whitespace-nowrap">
-                                        <Link
-                                            href={`/admin/aktualnosci/${post.id}/edytuj`}
-                                            className="inline-block text-stone-600 hover:text-stone-900 font-semibold text-xs uppercase tracking-wider border border-stone-200 px-3 py-1 rounded hover:bg-stone-50 transition-colors"
-                                        >
-                                            Edytuj
-                                        </Link>
-                                        <button
-                                            onClick={() =>
-                                                handleDelete(post.id)
-                                            }
-                                            className="text-red-600 hover:text-red-900 font-semibold text-xs uppercase tracking-wider border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition-colors"
-                                        >
-                                            Usuń
-                                        </button>
+                                    <td className="p-4 text-right whitespace-nowrap">
+                                        <div className="inline-flex items-center gap-2">
+                                            <Link
+                                                href={`/admin/aktualnosci/${post.id}/edytuj`}
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-parish-border bg-parish-cream hover:bg-parish-navy text-parish-navy hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors"
+                                            >
+                                                <Pencil className="w-3.5 h-3.5" />
+                                                <span>Edytuj</span>
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(post.id)
+                                                }
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-600 text-red-700 hover:text-white font-semibold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                                <span>Usuń</span>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -208,23 +222,23 @@ export default function Index({ posts }: IndexProps) {
                     </table>
 
                     {posts.data.length === 0 && (
-                        <div className="text-center text-stone-400 py-12 italic">
-                            Brak postów w bazie danych
+                        <div className="text-center text-stone-500 py-10 italic">
+                            Brak postów w bazie danych.
                         </div>
                     )}
                 </div>
 
                 {posts.links && posts.links.length > 3 && (
-                    <div className="flex flex-wrap justify-center gap-1 mt-6 pt-4 border-t border-stone-200">
+                    <div className="flex flex-wrap justify-center gap-1.5 mt-6">
                         {posts.links.map((link, index) => {
                             const translatedLabel = link.label
-                                .replace("Previous", "&laquo;")
-                                .replace("Next", "&raquo;");
+                                .replace("Previous", "Poprzednia")
+                                .replace("Next", "Następna");
 
                             return !link.url ? (
                                 <span
                                     key={index}
-                                    className="px-3 py-1 text-sm border bg-stone-50 text-stone-400 border-stone-200"
+                                    className="px-3.5 py-1.5 text-sm rounded-lg border bg-parish-sand/50 text-stone-400 border-parish-border"
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
                                     }}
@@ -233,10 +247,10 @@ export default function Index({ posts }: IndexProps) {
                                 <Link
                                     key={index}
                                     href={link.url}
-                                    className={`px-3 py-1 text-sm border flex items-center justify-center transition-all ${
+                                    className={`px-3.5 py-1.5 text-sm rounded-lg border flex items-center justify-center transition-all ${
                                         link.active
-                                            ? "bg-[#cca572] text-white border-[#cca572] font-bold shadow-sm"
-                                            : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                                            ? "bg-parish-navy text-white border-parish-navy font-semibold"
+                                            : "bg-white text-parish-navy border-parish-border hover:bg-parish-sand"
                                     }`}
                                     dangerouslySetInnerHTML={{
                                         __html: translatedLabel,
@@ -247,6 +261,6 @@ export default function Index({ posts }: IndexProps) {
                     </div>
                 )}
             </div>
-        </ParishLayout>
+        </div>
     );
 }
