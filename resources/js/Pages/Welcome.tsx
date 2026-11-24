@@ -1,13 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
-import {
-    ArrowRight,
-    Calendar,
-    Clock,
-    Landmark,
-    Sparkles,
-    X,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { ArrowRight, Calendar, Clock, Landmark } from "lucide-react";
+import React from "react";
 import HeroSlider from "@/components/HeroSlider";
 import ParishLayout from "@/layouts/ParishLayout";
 
@@ -45,131 +38,85 @@ interface WelcomeProps {
     posts: PaginatedPosts;
 }
 
-const WELCOME_STORAGE_KEY = "parafia_olbierzowice_welcomed_v1";
-
 export default function Welcome({ posts }: WelcomeProps) {
-    const [showWelcome, setShowWelcome] = useState(false);
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const forceWelcome = params.get("powitanie") === "1";
-        const hasVisitedBefore = localStorage.getItem(WELCOME_STORAGE_KEY);
-
-        if (forceWelcome || !hasVisitedBefore) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setShowWelcome(true);
-            // Zapisujemy wizytę od razu, żeby przy kolejnych wejściach powitanie już się nie pojawiało,
-            // ale przy pierwszej wizycie pozostało widoczne przez cały czas czytania.
-            localStorage.setItem(WELCOME_STORAGE_KEY, "1");
-        }
-    }, []);
-
-    const handleDismissWelcome = () => {
-        localStorage.setItem(WELCOME_STORAGE_KEY, "1");
-        setShowWelcome(false);
-        const url = new URL(window.location.href);
-        if (url.searchParams.has("powitanie")) {
-            url.searchParams.delete("powitanie");
-            window.history.replaceState({}, "", url.toString());
-        }
-    };
-
-    const handleShowWelcomeAgain = () => {
-        setShowWelcome(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
     return (
         <ParishLayout hero={<HeroSlider />}>
             <Head title="Strona Główna" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                {/* LEWA KOLUMNA: Powitanie (tylko przy 1. wizycie) + Aktualności */}
+                {/* LEWA KOLUMNA: Powitanie + Aktualności */}
                 <div className="lg:col-span-8 flex flex-col gap-8">
-                    {showWelcome && (
-                        <section
-                            aria-label="Słowo powitalne"
-                            className="relative bg-white rounded-xl border border-parish-gold/55 border-l-4 border-l-parish-gold shadow-sm overflow-hidden"
-                        >
-                            <div className="bg-parish-sand/55 px-6 sm:px-8 py-4 border-b border-parish-border flex items-center justify-between gap-4">
-                                <div className="flex items-center gap-2.5">
-                                    <span className="h-0.5 w-6 bg-parish-gold" />
-                                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-parish-gold-text">
-                                        Szczęść Boże!
-                                    </span>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={handleDismissWelcome}
-                                    aria-label="Ukryj powitanie"
-                                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-parish-navy bg-white/80 hover:bg-white px-3 py-1.5 rounded-lg border border-parish-border transition-colors cursor-pointer"
-                                >
-                                    <span>Ukryj</span>
-                                    <X className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
+                    <section
+                        id="powitanie"
+                        aria-label="Słowo powitalne"
+                        className="relative bg-white rounded-xl border border-parish-gold/55 border-l-4 border-l-parish-gold shadow-sm overflow-hidden scroll-mt-24"
+                    >
+                        <div className="bg-parish-sand/55 px-6 sm:px-8 py-3.5 border-b border-parish-border flex items-center gap-2.5">
+                            <span className="h-0.5 w-6 bg-parish-gold" />
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-parish-gold-text">
+                                Szczęść Boże!
+                            </span>
+                        </div>
 
-                            <div className="p-6 sm:p-8 space-y-4 text-[#38312b] text-[15.5px] sm:text-base leading-relaxed">
-                                <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy leading-snug">
-                                    Witamy na stronie Parafii pw. św. Wawrzyńca
-                                    w Olbierzowicach!
-                                </h2>
+                        <div className="p-6 sm:p-8 space-y-4 text-[#38312b] text-[15.5px] sm:text-base leading-relaxed">
+                            <h2 className="font-serif text-xl sm:text-2xl font-bold text-parish-navy leading-snug">
+                                Witamy na stronie Parafii pw. św. Wawrzyńca w
+                                Olbierzowicach!
+                            </h2>
 
-                                <p className="font-medium text-parish-navy">
-                                    Cieszymy się, że odwiedzasz naszą parafialną
-                                    przestrzeń w sieci.
-                                </p>
+                            <p className="font-medium text-parish-navy">
+                                Cieszymy się, że odwiedzasz naszą parafialną
+                                przestrzeń w sieci.
+                            </p>
 
-                                <p>
-                                    Nasza wspólnota, której patronuje św.
-                                    Wawrzyniec – diakon i męczennik, od wieków
-                                    gromadzi wiernych wokół Chrystusa. Bogata
-                                    historia, sięgająca początków XIII wieku,
-                                    jest dla nas cennym dziedzictwem, które z
-                                    wdzięcznością pielęgnujemy i przekazujemy
-                                    kolejnym pokoleniom.
-                                </p>
+                            <p>
+                                Nasza wspólnota, której patronuje św. Wawrzyniec
+                                – diakon i męczennik, od wieków gromadzi
+                                wiernych wokół Chrystusa. Bogata historia,
+                                sięgająca początków XIII wieku, jest dla nas
+                                cennym dziedzictwem, które z wdzięcznością
+                                pielęgnujemy i przekazujemy kolejnym pokoleniom.
+                            </p>
 
-                                <p>
-                                    Parafia to przede wszystkim ludzie, wspólna
-                                    modlitwa, życzliwość i troska o siebie
-                                    nawzajem. Spotykając się na Eucharystii,
-                                    przyjmując Sakramenty, pielgrzymując
-                                    budujemy naszą duchową rodzinę.
-                                </p>
+                            <p>
+                                Parafia to przede wszystkim ludzie, wspólna
+                                modlitwa, życzliwość i troska o siebie nawzajem.
+                                Spotykając się na Eucharystii, przyjmując
+                                Sakramenty, pielgrzymując budujemy naszą duchową
+                                rodzinę.
+                            </p>
 
-                                <p>
-                                    Zapraszamy do poznania naszej wspólnoty! Na
-                                    stronie znajdziesz aktualności parafialne,
-                                    ogłoszenia, godziny Mszy Świętych i
-                                    nabożeństw, informacje o wydarzeniach oraz
-                                    historię naszej parafii.
-                                </p>
+                            <p>
+                                Zapraszamy do poznania naszej wspólnoty! Na
+                                stronie znajdziesz aktualności parafialne,
+                                ogłoszenia, godziny Mszy Świętych i nabożeństw,
+                                informacje o wydarzeniach oraz historię naszej
+                                parafii.
+                            </p>
 
-                                <p>
-                                    Niech ta strona będzie nie tylko źródłem
-                                    informacji, ale także zaproszeniem do
-                                    wspólnej modlitwy i pogłębiania wiary.
-                                </p>
+                            <p>
+                                Niech ta strona będzie nie tylko źródłem
+                                informacji, ale także zaproszeniem do wspólnej
+                                modlitwy i pogłębiania wiary.
+                            </p>
 
-                                <p className="font-semibold text-parish-navy">
-                                    Serdecznie zapraszamy!
-                                </p>
+                            <p className="font-semibold text-parish-navy">
+                                Serdecznie zapraszamy!
+                            </p>
 
-                                <div className="pt-4 mt-2 border-t border-parish-border/80 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                                    <div>
-                                        <p className="font-serif italic text-parish-gold-text text-sm sm:text-base">
-                                            Z modlitwą i błogosławieństwem –
-                                        </p>
-                                        <p className="font-serif font-semibold text-parish-navy text-sm sm:text-base mt-0.5">
-                                            Duszpasterze i wspólnota Parafii pw.
-                                            św. Wawrzyńca w Olbierzowicach
-                                        </p>
-                                    </div>
+                            <div className="pt-4 mt-2 border-t border-parish-border/80 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                                <div>
+                                    <p className="font-serif italic text-parish-gold-text text-sm sm:text-base">
+                                        Z modlitwą i błogosławieństwem –
+                                    </p>
+                                    <p className="font-serif font-semibold text-parish-navy text-sm sm:text-base mt-0.5">
+                                        Duszpasterze i wspólnota Parafii pw. św.
+                                        Wawrzyńca w Olbierzowicach
+                                    </p>
                                 </div>
                             </div>
-                        </section>
-                    )}
+                        </div>
+                    </section>
 
                     {/* Aktualności parafialne */}
                     <section className="flex flex-col gap-6">
@@ -518,16 +465,6 @@ export default function Welcome({ posts }: WelcomeProps) {
                                     <span>Poznaj historię parafii</span>
                                     <ArrowRight className="w-4 h-4 text-parish-gold-light" />
                                 </Link>
-                                {!showWelcome && (
-                                    <button
-                                        type="button"
-                                        onClick={handleShowWelcomeAgain}
-                                        className="inline-flex items-center justify-center gap-2 bg-white hover:bg-parish-cream border border-parish-border text-parish-navy font-semibold text-xs uppercase tracking-wider py-2.5 px-4 rounded-lg transition-colors cursor-pointer"
-                                    >
-                                        <Sparkles className="w-3.5 h-3.5 text-parish-gold-text" />
-                                        <span>Przeczytaj słowo powitalne</span>
-                                    </button>
-                                )}
                             </div>
                         </div>
                     </section>

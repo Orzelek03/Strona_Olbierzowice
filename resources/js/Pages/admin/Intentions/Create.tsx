@@ -6,7 +6,7 @@ import "react-quill-new/dist/quill.snow.css";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
-        title: "",
+        title: "Intencje Mszalne ",
         content: "",
     });
 
@@ -51,14 +51,14 @@ export default function Create() {
                 <form onSubmit={submit} className="flex flex-col gap-6">
                     <div>
                         <label className="block text-xs font-bold text-parish-navy mb-2 uppercase tracking-wider">
-                            Tytuł (np. Intencje Mszalne 19.10 – 25.10)
+                            Tytuł (dopisz datę, np. 19.10 – 25.10)
                         </label>
                         <input
                             type="text"
                             value={data.title}
                             onChange={(e) => setData("title", e.target.value)}
                             className="w-full border border-parish-border rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-parish-gold focus:border-parish-gold focus:outline-none text-[#231f1b]"
-                            placeholder="Wpisz tytuł..."
+                            placeholder="Intencje Mszalne 19.10 – 25.10"
                         />
                         {errors.title && (
                             <span className="text-red-600 text-xs mt-1.5 block">

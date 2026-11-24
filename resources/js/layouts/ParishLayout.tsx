@@ -417,7 +417,7 @@ export default function ParishLayout({
                             ))}
                             <li>
                                 <Link
-                                    href="/?powitanie=1"
+                                    href="/#powitanie"
                                     className="text-[#c8d4e5] hover:text-parish-gold-light transition-colors"
                                 >
                                     Słowo powitalne
