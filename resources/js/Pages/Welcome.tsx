@@ -162,7 +162,7 @@ function WelcomeSplash({ onEnter }: { onEnter: () => void }) {
                                 Z modlitwą i błogosławieństwem –
                             </p>
                             <p className="font-serif font-semibold text-parish-navy text-sm sm:text-base mt-0.5">
-                                Duszpasterz i wspólnota Parafii pw. św.
+                                Duszpasterze i wspólnota Parafii pw. św.
                                 Wawrzyńca w Olbierzowicach
                             </p>
                         </div>
