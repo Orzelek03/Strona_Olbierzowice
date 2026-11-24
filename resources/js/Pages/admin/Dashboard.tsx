@@ -1,8 +1,9 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import {
     ArrowRight,
     BookOpen,
     ExternalLink,
+    Eye,
     Images,
     Megaphone,
     Newspaper,
@@ -45,6 +46,8 @@ const ADMIN_MODULES = [
 ];
 
 export default function Dashboard() {
+    const { visitCount } = usePage().props as { visitCount?: number };
+
     return (
         <>
             <Head title="Panel Administratora" />
@@ -63,13 +66,26 @@ export default function Dashboard() {
                             zarządzać treścią strony.
                         </p>
                     </div>
-                    <Link
-                        href="/"
-                        className="inline-flex items-center gap-2 self-start sm:self-center px-4 py-2.5 rounded-lg bg-white/10 hover:bg-parish-gold text-white hover:text-parish-navy-dark border border-parish-gold/40 text-sm font-semibold transition-colors shrink-0"
-                    >
-                        <span>Zobacz stronę</span>
-                        <ExternalLink className="w-4 h-4" />
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-3 self-start sm:self-center shrink-0">
+                        {typeof visitCount === "number" && (
+                            <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-parish-navy-dark/70 border border-parish-gold/45 text-sm">
+                                <Eye className="w-4 h-4 text-parish-gold-light" />
+                                <span className="text-[#c7d3e3]">
+                                    Odwiedzin:
+                                </span>
+                                <span className="font-bold text-white tabular-nums">
+                                    {visitCount.toLocaleString("pl-PL")}
+                                </span>
+                            </div>
+                        )}
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 hover:bg-parish-gold text-white hover:text-parish-navy-dark border border-parish-gold/40 text-sm font-semibold transition-colors"
+                        >
+                            <span>Zobacz stronę</span>
+                            <ExternalLink className="w-4 h-4" />
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Karty modułów na całą szerokość */}

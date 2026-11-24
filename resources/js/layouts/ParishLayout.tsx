@@ -3,6 +3,7 @@ import {
     BookOpen,
     Clock,
     ExternalLink,
+    Eye,
     Home,
     Images,
     Landmark,
@@ -51,7 +52,14 @@ export default function ParishLayout({
 }: ParishLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const page = usePage();
-    const { auth } = page.props as { auth?: { user?: unknown } };
+    const { auth, visitCount } = page.props as {
+        auth?: { user?: unknown };
+        visitCount?: number;
+    };
+    const formattedVisits =
+        typeof visitCount === "number"
+            ? visitCount.toLocaleString("pl-PL")
+            : null;
     const currentPath = page.url.split("?")[0];
 
     const isItemActive = (item: (typeof NAV_ITEMS)[number]) => {
@@ -112,7 +120,7 @@ export default function ParishLayout({
             </header>
 
             {/* PRZYKLEJONA NAWIGACJA (DESKTOP + MOBILE) */}
-            <div className="sticky top-0 z-30 bg-parish-sand/95 backdrop-blur-md border-b border-parish-gold/45 shadow-sm">
+            <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-parish-gold/45 shadow-xs">
                 {/* Mobile header bar */}
                 <div className="lg:hidden bg-parish-navy text-white px-4 py-3 flex items-center justify-between gap-3">
                     <Link
@@ -140,59 +148,73 @@ export default function ParishLayout({
                     </button>
                 </div>
 
-                {/* Desktop navigation */}
+                {/* Desktop navigation — czysta linia ze złotym podkreśleniem aktywnej zakładki */}
                 <nav
                     aria-label="Nawigacja główna"
-                    className="hidden lg:flex max-w-7xl mx-auto px-6 py-2 items-center justify-between gap-2"
+                    className="hidden lg:flex max-w-7xl mx-auto px-6 items-center justify-between gap-4"
                 >
-                    <div className="flex items-center gap-1.5">
-                        {NAV_ITEMS.map((item) => {
+                    <div className="flex items-stretch">
+                        {NAV_ITEMS.map((item, idx) => {
                             const Icon = item.icon;
                             const active = isItemActive(item);
                             return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 ${
-                                        active
-                                            ? "bg-parish-navy text-white shadow-sm"
-                                            : "text-parish-navy hover:bg-white/80 hover:text-parish-navy-dark"
-                                    }`}
-                                >
-                                    <Icon
-                                        className={`w-4 h-4 ${
+                                <React.Fragment key={item.href}>
+                                    {idx > 0 && (
+                                        <span
+                                            aria-hidden="true"
+                                            className="self-center h-4 w-px bg-parish-border"
+                                        />
+                                    )}
+                                    <Link
+                                        href={item.href}
+                                        className={`relative inline-flex items-center gap-2 px-4 xl:px-5 py-3.5 text-sm font-semibold tracking-wide transition-colors duration-200 ${
                                             active
-                                                ? "text-parish-gold-light"
-                                                : "text-parish-gold-text"
+                                                ? "text-parish-navy bg-parish-cream/85"
+                                                : "text-parish-navy/80 hover:text-parish-navy hover:bg-parish-cream/50"
                                         }`}
-                                    />
-                                    <span>{item.label}</span>
-                                </Link>
+                                    >
+                                        <Icon
+                                            className={`w-4 h-4 transition-colors ${
+                                                active
+                                                    ? "text-parish-crimson"
+                                                    : "text-parish-gold-text"
+                                            }`}
+                                        />
+                                        <span>{item.label}</span>
+                                        <span
+                                            aria-hidden="true"
+                                            className={`absolute inset-x-3 bottom-0 h-[3px] rounded-t-full transition-all duration-200 ${
+                                                active
+                                                    ? "bg-parish-gold opacity-100"
+                                                    : "bg-parish-gold/40 opacity-0"
+                                            }`}
+                                        />
+                                    </Link>
+                                </React.Fragment>
                             );
                         })}
                     </div>
 
-                    <div className="flex items-center gap-4 text-xs font-semibold text-parish-navy/80">
+                    <div className="flex items-center gap-3 text-xs font-semibold">
                         <a
                             href="tel:+48158661350"
-                            className="inline-flex items-center gap-1.5 hover:text-parish-navy transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-parish-cream border border-parish-border text-parish-navy hover:border-parish-gold transition-colors"
                         >
                             <Phone className="w-3.5 h-3.5 text-parish-gold-text" />
                             <span>15 866 13 50</span>
                         </a>
-                        <span className="h-3.5 w-px bg-parish-gold/50" />
                         <a
                             href="https://www.facebook.com/profile.php?id=100089487466133#"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-parish-navy/80 hover:text-[#1877F2] transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-parish-cream border border-parish-border text-parish-navy hover:border-[#1877F2] hover:text-[#1877F2] transition-colors"
                             aria-label="Facebook parafii"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                className="w-4 h-4"
+                                className="w-3.5 h-3.5"
                             >
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
@@ -446,33 +468,94 @@ export default function ParishLayout({
                 </div>
 
                 {/* Dolny pasek praw autorskich */}
-                <div className="border-t border-white/10 bg-parish-navy-dark/60">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#a8b8cf]">
-                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3">
-                            <span>
-                                &copy; {new Date().getFullYear()} Parafia pw. św.
-                                Wawrzyńca w Olbierzowicach.
-                            </span>
-                            <span className="hidden sm:inline opacity-40">
-                                |
-                            </span>
-                            <Link
-                                href={
-                                    auth?.user ? "/admin/dashboard" : "/login"
-                                }
-                                className="hover:text-parish-gold-light transition-colors font-medium"
-                            >
-                                {auth?.user
-                                    ? "Panel Administratora"
-                                    : "Logowanie"}
-                            </Link>
-                        </div>
-                        <p className="font-serif italic text-sm text-parish-gold-light">
-                            Bóg zapłać za odwiedziny!
-                        </p>
+                <div className="border-t border-white/10 bg-parish-navy-dark/50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-center sm:justify-between gap-3 text-xs text-[#a8b8cf]">
+                        <span>
+                            &copy; {new Date().getFullYear()} Parafia pw. św.
+                            Wawrzyńca w Olbierzowicach. Wszelkie prawa
+                            zastrzeżone.
+                        </span>
+                        <Link
+                            href={auth?.user ? "/admin/dashboard" : "/login"}
+                            className="hover:text-parish-gold-light transition-colors font-medium"
+                        >
+                            {auth?.user ? "Panel Administratora" : "Logowanie"}
+                        </Link>
                     </div>
                 </div>
             </footer>
+
+            {/* PRZYKLEJONY DOLNY PASEK STOPKI — ZAWSZE WIDOCZNY */}
+            <div
+                role="contentinfo"
+                aria-label="Szybkie informacje kontaktowe parafii"
+                className="sticky bottom-0 z-20 bg-parish-navy-dark/95 backdrop-blur-md text-[#dce3ee] border-t border-parish-gold/60 shadow-[0_-4px_18px_rgba(15,32,56,0.22)]"
+            >
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4 text-xs">
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 min-w-0">
+                        <span className="inline-flex items-center gap-1.5 text-[#dce3ee]">
+                            <MapPin className="w-3.5 h-3.5 text-parish-gold-light shrink-0" />
+                            <span className="hidden sm:inline">
+                                Olbierzowice 35, 27-640 Klimontów
+                            </span>
+                            <span className="sm:hidden">Olbierzowice 35</span>
+                        </span>
+
+                        <span
+                            aria-hidden="true"
+                            className="hidden sm:inline h-3.5 w-px bg-white/20"
+                        />
+
+                        <a
+                            href="tel:+48158661350"
+                            className="inline-flex items-center gap-1.5 text-white hover:text-parish-gold-light font-semibold transition-colors"
+                        >
+                            <Phone className="w-3.5 h-3.5 text-parish-gold-light shrink-0" />
+                            <span>15 866 13 50</span>
+                        </a>
+
+                        <span
+                            aria-hidden="true"
+                            className="hidden lg:inline h-3.5 w-px bg-white/20"
+                        />
+
+                        <span className="hidden lg:inline-flex items-center gap-1.5 text-[#c8d4e5]">
+                            <Clock className="w-3.5 h-3.5 text-parish-gold-light shrink-0" />
+                            <span>
+                                Kancelaria: pon.–pt. po Mszy wieczornej, sob.
+                                9:00–10:00
+                            </span>
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-4 shrink-0">
+                        {formattedVisits !== null && (
+                            <span
+                                title="Liczba odwiedzin strony parafii"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-parish-gold/35 text-[#e8dfd1] font-medium"
+                            >
+                                <Eye className="w-3.5 h-3.5 text-parish-gold-light shrink-0" />
+                                <span className="hidden sm:inline text-[#c8d4e5]">
+                                    Odwiedzin:
+                                </span>
+                                <span className="font-semibold text-white tabular-nums">
+                                    {formattedVisits}
+                                </span>
+                            </span>
+                        )}
+
+                        <p className="hidden md:block font-serif italic text-sm text-parish-gold-light shrink-0">
+                            Bóg zapłać za odwiedziny!
+                        </p>
+                        <Link
+                            href="/kontakt"
+                            className="md:hidden text-parish-gold-light font-semibold shrink-0"
+                        >
+                            Kontakt &raquo;
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
